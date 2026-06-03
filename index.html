@@ -2440,7 +2440,7 @@ function downloadUpdatedHTML() {
   let newHTML = docHTML.replace(catsRe, newCatsJS);
 
   // 念のためadmin-overlayのstyle="display:..."を消す
-  newHTML = newHTML.replace(/(<div id="admin-overlay">]*>/, '$1>');
+  newHTML = newHTML.replace(/(<div id="admin-overlay")[^>]*>/, '$1>');
 
   // Admin表示を元に戻す
   overlay.style.display = prevDisplay;
