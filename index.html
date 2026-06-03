@@ -252,7 +252,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 @media(min-width:601px) and (max-width:900px){.masonry{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
-<body style="--theme-accent: #d42020; --theme-accent-l: #e85050; --theme-accent-d: #8a1010; --theme-bg: #080c14; --theme-placeholder: #0e1420; --theme-ph-stroke: #3a4a62; --theme-border: rgba(255,255,255,0.06); --theme-muted: #3a4a62; --theme-text: #8aaac8; --theme-cap-grad: rgba(4,6,12,0.8); --theme-header-bg: rgba(8,12,20,0.85); --theme-header-border: rgba(255,255,255,0.06); --theme-logo-color: rgba(255,255,255,0.9); background: rgb(8, 12, 20); color: rgb(138, 170, 200);">
+<body style="--theme-accent: #1a6640; --theme-accent-l: #a8d8be; --theme-accent-d: #1a6640; --theme-bg: #f4faf5; --theme-placeholder: #e8f4ea; --theme-ph-stroke: #aacab4; --theme-border: rgba(76,175,125,0.2); --theme-muted: #6e7a8a; --theme-text: #1e2430; --theme-cap-grad: rgba(20,50,30,0.45); --theme-header-bg: rgba(244,250,245,0.92); --theme-header-border: rgba(76,175,125,0.2); --theme-logo-color: #1a6640; background: rgb(244, 250, 245); color: rgb(30, 36, 48);">
 
 <style>
 #page-loading{
@@ -277,7 +277,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 </header>
 <div class="mobile-menu" id="mobile-menu"></div>
 
-<section id="top" style="padding-top: 56px; display: block;">
+<section id="top" style="padding-top: 56px; display: none;">
   <div id="slides-container"></div>
   <div class="slide-overlay"></div>
   <div class="top-center">
@@ -293,10 +293,10 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   </div>
 </section>
 
-<section id="portfolio" style="display: none;">
-  <div class="cat-tabs" id="cat-tabs" style="display: none;"></div>
+<section id="portfolio" style="display: block;">
+  <div class="cat-tabs" id="cat-tabs" style="display: flex;"></div>
   <div id="cat-pages"></div>
-  <div id="about-page">
+  <div id="about-page" class="">
     <div class="page-eyebrow">About</div>
     <div class="about-header">
       <div class="page-title" style="margin-bottom:0">i_dauyu</div>
@@ -323,7 +323,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
     </div>
   </div>
 
-  <div id="contact-page">
+  <div id="contact-page" class="">
     <div class="page-eyebrow">Contact</div>
     <div class="page-title" style="margin-bottom:96px">Get in Touch.</div>
     <div class="contact-list">
@@ -2432,7 +2432,7 @@ function downloadUpdatedHTML() {
 
   // admin-overlayのstyle="display:..."を消す
   // admin-overlayのstyle属性を除去
-  newHTML = newHTML.replace('<div id="admin-overlay" style="display: block;">', '<div id="admin-overlay">').replace('<div id="admin-overlay" style="display:block;">', '<div id="admin-overlay">');
+  newHTML = newHTML.replace('<div id="admin-overlay">', '<div id="admin-overlay">').replace('<div id="admin-overlay">', '<div id="admin-overlay">');
 
   // Admin表示を元に戻す
   overlay.style.display = prevDisplay;
@@ -2637,6 +2637,7 @@ window.adminToggleMini = adminToggleMini;
   </div>
   <button id="lb-close" onclick="lightboxClose()">Close</button>
 </div>
+
 
 
 
