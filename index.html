@@ -2361,13 +2361,92 @@ function downloadUpdatedHTML() {
     })
   })), null, 2) + ';';
 
+  // 動的生成された要素を一時的に空にしてからHTML取得
+  const mainNav = document.getElementById('main-nav');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const slidesContainer = document.getElementById('slides-container');
+  const topCatButtons = document.getElementById('top-cat-buttons');
+  const catTabs = document.getElementById('cat-tabs');
+  const catPages = document.getElementById('cat-pages');
+  const adminBody = document.getElementById('admin-body');
+  const shopList = document.getElementById('shop-list');
+  const slideIndicators = document.getElementById('slide-indicators');
+
+  const savedNav = mainNav.innerHTML;
+  const savedMobileMenu = mobileMenu.innerHTML;
+  const savedSlides = slidesContainer.innerHTML;
+  const savedTopCatButtons = topCatButtons.innerHTML;
+  const savedCatTabs = catTabs.innerHTML;
+  const savedCatPages = catPages.innerHTML;
+  const savedAdminBody = adminBody.innerHTML;
+  const savedShopList = shopList.innerHTML;
+  const savedSlideIndicators = slideIndicators.innerHTML;
+
+  mainNav.innerHTML = '';
+  mobileMenu.innerHTML = '';
+  slidesContainer.innerHTML = '';
+  topCatButtons.innerHTML = '';
+  catTabs.innerHTML = '';
+  catPages.innerHTML = '';
+  adminBody.innerHTML = '';
+  shopList.innerHTML = '';
+  slideIndicators.innerHTML = '';
+
   let docHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  // 元に戻す
+  mainNav.innerHTML = savedNav;
+  mobileMenu.innerHTML = savedMobileMenu;
+  slidesContainer.innerHTML = savedSlides;
+  topCatButtons.innerHTML = savedTopCatButtons;
+  catTabs.innerHTML = savedCatTabs;
+  catPages.innerHTML = savedCatPages;
+  adminBody.innerHTML = savedAdminBody;
+  shopList.innerHTML = savedShopList;
+  slideIndicators.innerHTML = savedSlideIndicators;
 
   // CATEGORIES定義部分を置き換え
   const catsRe = /const CATEGORIES = \[[\s\S]*?\n\];/;
   let newHTML = docHTML.replace(catsRe, newCatsJS);
 
-  // 念のためadmin-overlayのstyle="display:..."を消す
+  // フォント設定をHTMLに書き込む
+  try {
+    const savedFonts = JSON.parse(localStorage.getItem('idauyu_font') || '{}');
+    if (Object.keys(savedFonts).length > 0) {
+      const fontLinksHTML = Object.values(savedFonts)
+        .filter(f => f.url)
+        .map(f => `<link href="${f.url}" rel="stylesheet">`)
+        .join('\n');
+      const fontStylesHTML = Object.entries(savedFonts)
+        .map(([key, f]) => {
+          const targets = {
+            logo: '.header-logo',
+            nav: '.header-nav-link,.mobile-link',
+            topTitle: '#top-title',
+            topDesc: '#top-desc,#top-category',
+            catBtn: '.cat-btn,.cat-tab',
+            section: '.section-title',
+            aboutTitle: '#about-page .page-title',
+            aboutBody: '#about-page .about-body,#about-page .about-tags',
+            contactTitle: '#contact-page .page-title',
+            contactBody: '#contact-page .contact-item,#contact-page .contact-label',
+            shop: '#shop-page .page-title',
+          };
+          const sel = targets[key];
+          return sel ? `${sel}{font-family:'${f.name}',serif!important}` : '';
+        })
+        .filter(Boolean)
+        .join('\n');
+      if (fontLinksHTML) {
+        newHTML = newHTML.replace('</head>', fontLinksHTML + '\n</head>');
+      }
+      if (fontStylesHTML) {
+        newHTML = newHTML.replace('</head>', `<style id="font-overrides">\n${fontStylesHTML}\n</style>\n</head>`);
+      }
+    }
+  } catch(e) {}
+
+  // admin-overlayのstyle="display:..."を消す
   newHTML = newHTML.replace(/(<div id="admin-overlay")[^>]*>/, '$1>');
 
   // Admin表示を元に戻す
