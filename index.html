@@ -278,26 +278,14 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 <div class="mobile-menu" id="mobile-menu"></div>
 
 <section id="top" style="padding-top: 56px; display: none;">
-  <div id="slides-container"><div class="slide active" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG" alt=""></div><div class="slide" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG" alt=""></div><div class="slide" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG" alt=""></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI9253.JPG" alt="Desk"></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI9226.JPG" alt="Plants"></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI8174_2.JPG" alt="Books"></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG" alt=""></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG" alt=""></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG" alt=""></div></div>
+  <div id="slides-container"></div>
   <div class="slide-overlay"></div>
   <div class="top-center">
     <div class="top-category" id="top-category">Rainy Days</div>
     <h1 class="top-title" id="top-title">Wet City<br>Nights</h1>
     <p class="top-desc" id="top-desc">傘の色が夜を照らす。雨の日だけが持つ、静かな劇場性。</p>
   </div>
-  <div class="cat-buttons" id="top-cat-buttons">
-      <button class="cat-btn current" id="topbtn-rain" style="--btn-accent:#d42020" onclick="goPortfolio('rain')">
-        <span class="cat-btn-label">Rainy Days</span>
-        <span class="cat-btn-count" id="top-count-rain">28 photos</span>
-      </button>
-      <button class="cat-btn" id="topbtn-int" style="--btn-accent:#3a8aaa" onclick="goPortfolio('int')">
-        <span class="cat-btn-label">Our Paradise</span>
-        <span class="cat-btn-count" id="top-count-int">8 photos</span>
-      </button>
-      <button class="cat-btn" id="topbtn-snap" style="--btn-accent:#1a6640" onclick="goPortfolio('snap')">
-        <span class="cat-btn-label">Through My Eyes</span>
-        <span class="cat-btn-count" id="top-count-snap">20 photos</span>
-      </button></div>
+  <div class="cat-buttons" id="top-cat-buttons"></div>
   <div class="slide-indicators" id="slide-indicators"><button class="slide-dot active"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button></div>
   <div class="scroll-hint">
     <span>scroll</span>
@@ -306,68 +294,8 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 </section>
 
 <section id="portfolio" style="display: block;">
-  <div class="cat-tabs" id="cat-tabs" style="display: flex;">
-      <button class="cat-tab" id="tab-rain" onclick="showPage('rain')">
-        <span class="cat-btn-label">Rainy Days</span>
-        <span class="cat-btn-count" id="tab-count-rain">28 photos</span>
-      </button>
-      <button class="cat-tab" id="tab-int" onclick="showPage('int')">
-        <span class="cat-btn-label">Our Paradise</span>
-        <span class="cat-btn-count" id="tab-count-int">8 photos</span>
-      </button>
-      <button class="cat-tab" id="tab-snap" onclick="showPage('snap')">
-        <span class="cat-btn-label">Through My Eyes</span>
-        <span class="cat-btn-count" id="tab-count-snap">20 photos</span>
-      </button></div>
-  <div id="cat-pages">
-      <div id="page-rain" class="cat-page">
-        <div style="height:1px;background:#d42020;opacity:0.4"></div>
-        <div class="section-header">
-          <div class="section-title">Rainy Days</div>
-          <div class="section-count" id="count-rain">0 photos</div>
-        </div>
-        <div class="masonry" id="masonry-rain"></div>
-        <div class="load-more-wrap" id="loadmore-rain" style="display:none">
-          <button class="load-more-btn" onclick="loadMore('rain')">Load More</button>
-        </div>
-        <div class="divider">
-          <div class="div-line"></div><div class="div-dot"></div>
-          <div class="div-text">Rainy Days</div>
-          <div class="div-dot"></div><div class="div-line"></div>
-        </div>
-      </div>
-      <div id="page-int" class="cat-page">
-        <div style="height:1px;background:#3a8aaa;opacity:0.4"></div>
-        <div class="section-header">
-          <div class="section-title">Our Paradise</div>
-          <div class="section-count" id="count-int">0 photos</div>
-        </div>
-        <div class="masonry" id="masonry-int"></div>
-        <div class="load-more-wrap" id="loadmore-int" style="display:none">
-          <button class="load-more-btn" onclick="loadMore('int')">Load More</button>
-        </div>
-        <div class="divider">
-          <div class="div-line"></div><div class="div-dot"></div>
-          <div class="div-text">Our Paradise</div>
-          <div class="div-dot"></div><div class="div-line"></div>
-        </div>
-      </div>
-      <div id="page-snap" class="cat-page">
-        <div style="height:1px;background:#1a6640;opacity:0.4"></div>
-        <div class="section-header">
-          <div class="section-title">Through My Eyes</div>
-          <div class="section-count" id="count-snap">0 photos</div>
-        </div>
-        <div class="masonry" id="masonry-snap"></div>
-        <div class="load-more-wrap" id="loadmore-snap" style="display:none">
-          <button class="load-more-btn" onclick="loadMore('snap')">Load More</button>
-        </div>
-        <div class="divider">
-          <div class="div-line"></div><div class="div-dot"></div>
-          <div class="div-text">Through My Eyes</div>
-          <div class="div-dot"></div><div class="div-line"></div>
-        </div>
-      </div></div>
+  <div class="cat-tabs" id="cat-tabs" style="display: flex;"></div>
+  <div id="cat-pages"></div>
   <div id="about-page">
     <div class="page-eyebrow">About</div>
     <div class="about-header">
@@ -2559,7 +2487,7 @@ window.adminToggleMini = adminToggleMini;
     <button class="admin-tab active" id="admin-tab-slides" onclick="adminSwitchTab('slides')">Slides</button>
     <button class="admin-tab" id="admin-tab-pages" onclick="adminSwitchTab('pages')">Pages</button>
   </div>
-  <div id="admin-body"><div style="padding: 20px 28px 8px; font-size: 9px; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.3);">TOP SLIDESHOW — スマホ表示の位置調整</div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 80% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">80.0% 50.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 24.3% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">24.3% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI9253.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Desk  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI9226.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 54.6% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Plants  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">54.6% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI8174_2.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 52.7% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Books  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">52.7% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 42% 100%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">42.0% 100.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="padding: 20px 28px;"><button class="a-btn red">Apply — サイトに反映</button></div></div>
+  <div id="admin-body"></div>
   <div id="admin-export-area" style="display: none;">
     <div id="admin-export-inner">
       <div id="admin-export-label">EXPORT JSON — HTMLのphotosに貼り付けて永続化できます</div>
