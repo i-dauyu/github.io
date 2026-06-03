@@ -277,7 +277,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 </header>
 <div class="mobile-menu" id="mobile-menu"></div>
 
-<section id="top" style="padding-top: 56px; display: none;">
+<section id="top" style="padding-top: 56px; display: block;">
   <div id="slides-container"></div>
   <div class="slide-overlay"></div>
   <div class="top-center">
@@ -286,15 +286,15 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
     <p class="top-desc" id="top-desc">傘の色が夜を照らす。雨の日だけが持つ、静かな劇場性。</p>
   </div>
   <div class="cat-buttons" id="top-cat-buttons"></div>
-  <div class="slide-indicators" id="slide-indicators"><button class="slide-dot active"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button></div>
+  <div class="slide-indicators" id="slide-indicators"></div>
   <div class="scroll-hint">
     <span>scroll</span>
     <svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
   </div>
 </section>
 
-<section id="portfolio" style="display: block;">
-  <div class="cat-tabs" id="cat-tabs" style="display: flex;"></div>
+<section id="portfolio" style="display: none;">
+  <div class="cat-tabs" id="cat-tabs" style="display: none;"></div>
   <div id="cat-pages"></div>
   <div id="about-page">
     <div class="page-eyebrow">About</div>
@@ -338,23 +338,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   <div id="shop-page">
     <div class="page-eyebrow">Shop</div>
     <div class="page-title">Prints &amp;<br>Works.</div>
-    <div class="contact-list" id="shop-list">
-      <button class="contact-item">
-        <span><span class="contact-label">Rainy Days</span>Print · Worldwide</span>
-        <span class="arr">→</span>
-      </button>
-      <button class="contact-item">
-        <span><span class="contact-label">Our Paradise</span>Print · Worldwide</span>
-        <span class="arr">→</span>
-      </button>
-      <button class="contact-item">
-        <span><span class="contact-label">Through My Eyes</span>Print · Worldwide</span>
-        <span class="arr">→</span>
-      </button>
-    <button class="contact-item">
-      <span><span class="contact-label">Gumroad</span>Digital Downloads</span>
-      <span class="arr">→</span>
-    </button></div>
+    <div class="contact-list" id="shop-list"></div>
   </div>
   <footer class="site-footer">
     <button class="footer-item" onclick="window.open('https://www.instagram.com/i_dauyu/?hl=ja','_blank')">Instagram <span class="arr">→</span></button>
@@ -2447,7 +2431,7 @@ function downloadUpdatedHTML() {
   } catch(e) {}
 
   // admin-overlayのstyle="display:..."を消す
-  newHTML = newHTML.replace(/(<div id="admin-overlay")[^>]*>/, '$1>');
+  newHTML = newHTML.replace(/(<div id="admin-overlay">]*>/, '$1>');
 
   // Admin表示を元に戻す
   overlay.style.display = prevDisplay;
@@ -2652,6 +2636,7 @@ window.adminToggleMini = adminToggleMini;
   </div>
   <button id="lb-close" onclick="lightboxClose()">Close</button>
 </div>
+
 
 
 
