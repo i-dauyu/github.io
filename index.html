@@ -246,7 +246,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   .footer-item{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06);min-width:unset}
   #about-page,#contact-page,#shop-page{padding:40px 20px}
   .cat-tabs{overflow:visible;justify-content:stretch}
-  .cat-tab{flex:1;min-width:0;width:0;padding:10px 2px;font-size:10px;white-space:nowrap;letter-spacing:0.02em;overflow:hidden;text-overflow:ellipsis}
+  .cat-tab{flex:1;min-width:0;width:0;padding:10px 8px;font-size:12px;white-space:nowrap;letter-spacing:0.02em;overflow:hidden;text-overflow:ellipsis}
   .cat-btn-label{overflow:hidden;text-overflow:ellipsis}
 }
 @media(min-width:601px) and (max-width:900px){.masonry{grid-template-columns:repeat(3,1fr)}}
@@ -2431,7 +2431,8 @@ function downloadUpdatedHTML() {
   } catch(e) {}
 
   // admin-overlayのstyle="display:..."を消す
-  newHTML = newHTML.replace(/(<div id="admin-overlay">]*>/, '$1>');
+  // admin-overlayのstyle属性を除去
+  newHTML = newHTML.replace('<div id="admin-overlay" style="display: block;">', '<div id="admin-overlay">').replace('<div id="admin-overlay" style="display:block;">', '<div id="admin-overlay">');
 
   // Admin表示を元に戻す
   overlay.style.display = prevDisplay;
