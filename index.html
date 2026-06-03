@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja" style=""><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>i_dauyu — Photography</title>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&amp;family=Geist+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -253,7 +252,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 @media(min-width:601px) and (max-width:900px){.masonry{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
-<body>
+<body style="--theme-accent: #d42020; --theme-accent-l: #e85050; --theme-accent-d: #8a1010; --theme-bg: #080c14; --theme-placeholder: #0e1420; --theme-ph-stroke: #3a4a62; --theme-border: rgba(255,255,255,0.06); --theme-muted: #3a4a62; --theme-text: #8aaac8; --theme-cap-grad: rgba(4,6,12,0.8); --theme-header-bg: rgba(8,12,20,0.85); --theme-header-border: rgba(255,255,255,0.06); --theme-logo-color: rgba(255,255,255,0.9); background: rgb(8, 12, 20); color: rgb(138, 170, 200);">
 
 <style>
 #page-loading{
@@ -273,42 +272,111 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 
 <header id="site-header">
   <button class="header-logo" onclick="backToTop()">i_dauyu</button>
-  <nav class="header-nav" id="main-nav"></nav>
+  <nav class="header-nav" id="main-nav"><button class="header-nav-link" id="nav-work" onclick="showPage('rain')">Work</button><button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button><button class="header-nav-link" id="nav-shop" onclick="window.open('https://m2eu5aqavhzwivd5kax0.stores.jp','_blank')">Shop</button><button class="header-nav-link" id="nav-contact" onclick="goSection('contact')">Contact</button></nav>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </header>
-<div class="mobile-menu" id="mobile-menu"></div>
+<div class="mobile-menu" id="mobile-menu"><button class="mobile-link" onclick="showPage('rain');toggleMenu()">Work</button><button class="mobile-link" onclick="goSection('about');toggleMenu()">About</button><button class="mobile-link" onclick="window.open('https://m2eu5aqavhzwivd5kax0.stores.jp','_blank');toggleMenu()">Shop</button><button class="mobile-link" onclick="goSection('contact');toggleMenu()">Contact</button></div>
 
-<section id="top" style="padding-top:56px">
-  <div id="slides-container"></div>
+<section id="top" style="padding-top: 56px; display: none;">
+  <div id="slides-container"><div class="slide active" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG" alt=""></div><div class="slide" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG" alt=""></div><div class="slide" data-cat="rain" data-is-video="false"><img class="slide-img" src="rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG" alt=""></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI9253.JPG" alt="Desk"></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI9226.JPG" alt="Plants"></div><div class="slide" data-cat="int" data-is-video="false"><img class="slide-img" src="int/_SDI8174_2.JPG" alt="Books"></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG" alt=""></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG" alt=""></div><div class="slide" data-cat="snap" data-is-video="false"><img class="slide-img" src="snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG" alt=""></div></div>
   <div class="slide-overlay"></div>
   <div class="top-center">
-    <div class="top-category" id="top-category"></div>
-    <h1 class="top-title" id="top-title"></h1>
-    <p class="top-desc" id="top-desc"></p>
+    <div class="top-category" id="top-category">Rainy Days</div>
+    <h1 class="top-title" id="top-title">Wet City<br>Nights</h1>
+    <p class="top-desc" id="top-desc">傘の色が夜を照らす。雨の日だけが持つ、静かな劇場性。</p>
   </div>
-  <div class="cat-buttons" id="top-cat-buttons"></div>
-  <div class="slide-indicators" id="slide-indicators"></div>
+  <div class="cat-buttons" id="top-cat-buttons">
+      <button class="cat-btn current" id="topbtn-rain" style="--btn-accent:#d42020" onclick="goPortfolio('rain')">
+        <span class="cat-btn-label">Rainy Days</span>
+        <span class="cat-btn-count" id="top-count-rain">28 photos</span>
+      </button>
+      <button class="cat-btn" id="topbtn-int" style="--btn-accent:#3a8aaa" onclick="goPortfolio('int')">
+        <span class="cat-btn-label">Our Paradise</span>
+        <span class="cat-btn-count" id="top-count-int">8 photos</span>
+      </button>
+      <button class="cat-btn" id="topbtn-snap" style="--btn-accent:#1a6640" onclick="goPortfolio('snap')">
+        <span class="cat-btn-label">Through My Eyes</span>
+        <span class="cat-btn-count" id="top-count-snap">20 photos</span>
+      </button></div>
+  <div class="slide-indicators" id="slide-indicators"><button class="slide-dot active"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button><button class="slide-dot"></button></div>
   <div class="scroll-hint">
     <span>scroll</span>
-    <svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
   </div>
 </section>
 
-<section id="portfolio" style="display:none">
-  <div class="cat-tabs" id="cat-tabs" style="display:none"></div>
-  <div id="cat-pages"></div>
+<section id="portfolio" style="display: block;">
+  <div class="cat-tabs" id="cat-tabs" style="display: flex;">
+      <button class="cat-tab" id="tab-rain" onclick="showPage('rain')">
+        <span class="cat-btn-label">Rainy Days</span>
+        <span class="cat-btn-count" id="tab-count-rain">28 photos</span>
+      </button>
+      <button class="cat-tab" id="tab-int" onclick="showPage('int')">
+        <span class="cat-btn-label">Our Paradise</span>
+        <span class="cat-btn-count" id="tab-count-int">8 photos</span>
+      </button>
+      <button class="cat-tab" id="tab-snap" onclick="showPage('snap')">
+        <span class="cat-btn-label">Through My Eyes</span>
+        <span class="cat-btn-count" id="tab-count-snap">20 photos</span>
+      </button></div>
+  <div id="cat-pages">
+      <div id="page-rain" class="cat-page">
+        <div style="height:1px;background:#d42020;opacity:0.4"></div>
+        <div class="section-header">
+          <div class="section-title">Rainy Days</div>
+          <div class="section-count" id="count-rain">0 photos</div>
+        </div>
+        <div class="masonry" id="masonry-rain"></div>
+        <div class="load-more-wrap" id="loadmore-rain" style="display:none">
+          <button class="load-more-btn" onclick="loadMore('rain')">Load More</button>
+        </div>
+        <div class="divider">
+          <div class="div-line"></div><div class="div-dot"></div>
+          <div class="div-text">Rainy Days</div>
+          <div class="div-dot"></div><div class="div-line"></div>
+        </div>
+      </div>
+      <div id="page-int" class="cat-page">
+        <div style="height:1px;background:#3a8aaa;opacity:0.4"></div>
+        <div class="section-header">
+          <div class="section-title">Our Paradise</div>
+          <div class="section-count" id="count-int">0 photos</div>
+        </div>
+        <div class="masonry" id="masonry-int"></div>
+        <div class="load-more-wrap" id="loadmore-int" style="display:none">
+          <button class="load-more-btn" onclick="loadMore('int')">Load More</button>
+        </div>
+        <div class="divider">
+          <div class="div-line"></div><div class="div-dot"></div>
+          <div class="div-text">Our Paradise</div>
+          <div class="div-dot"></div><div class="div-line"></div>
+        </div>
+      </div>
+      <div id="page-snap" class="cat-page">
+        <div style="height:1px;background:#1a6640;opacity:0.4"></div>
+        <div class="section-header">
+          <div class="section-title">Through My Eyes</div>
+          <div class="section-count" id="count-snap">0 photos</div>
+        </div>
+        <div class="masonry" id="masonry-snap"></div>
+        <div class="load-more-wrap" id="loadmore-snap" style="display:none">
+          <button class="load-more-btn" onclick="loadMore('snap')">Load More</button>
+        </div>
+        <div class="divider">
+          <div class="div-line"></div><div class="div-dot"></div>
+          <div class="div-text">Through My Eyes</div>
+          <div class="div-dot"></div><div class="div-line"></div>
+        </div>
+      </div></div>
   <div id="about-page">
     <div class="page-eyebrow">About</div>
     <div class="about-header">
       <div class="page-title" style="margin-bottom:0">i_dauyu</div>
       <!-- ↓src='' に画像パスを書くと表示されます -->
       <div class="about-photo-wrap">
-        <img id="about-photo" src="" alt="profile"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-          onload="this.style.display='block';this.nextElementSibling.style.display='none'"
-          style="display:none">
-        <div class="about-photo-placeholder">
-          <svg viewBox="0 0 24 24" stroke-width="0.8"><circle cx="12" cy="8" r="4"/><path d="M4,20 C4,16 8,13 12,13 C16,13 20,16 20,20"/></svg>
+        <img id="about-photo" src="" alt="profile" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" onload="this.style.display='block';this.nextElementSibling.style.display='none'" style="display:none">
+        <div class="about-photo-placeholder" style="display: flex;">
+          <svg viewBox="0 0 24 24" stroke-width="0.8"><circle cx="12" cy="8" r="4"></circle><path d="M4,20 C4,16 8,13 12,13 C16,13 20,16 20,20"></path></svg>
         </div>
       </div>
     </div>
@@ -342,7 +410,23 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   <div id="shop-page">
     <div class="page-eyebrow">Shop</div>
     <div class="page-title">Prints &amp;<br>Works.</div>
-    <div class="contact-list" id="shop-list"></div>
+    <div class="contact-list" id="shop-list">
+      <button class="contact-item">
+        <span><span class="contact-label">Rainy Days</span>Print · Worldwide</span>
+        <span class="arr">→</span>
+      </button>
+      <button class="contact-item">
+        <span><span class="contact-label">Our Paradise</span>Print · Worldwide</span>
+        <span class="arr">→</span>
+      </button>
+      <button class="contact-item">
+        <span><span class="contact-label">Through My Eyes</span>Print · Worldwide</span>
+        <span class="arr">→</span>
+      </button>
+    <button class="contact-item">
+      <span><span class="contact-label">Gumroad</span>Digital Downloads</span>
+      <span class="arr">→</span>
+    </button></div>
   </div>
   <footer class="site-footer">
     <button class="footer-item" onclick="window.open('https://www.instagram.com/i_dauyu/?hl=ja','_blank')">Instagram <span class="arr">→</span></button>
@@ -363,171 +447,310 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 // ════════════════════════════════════════════════════════════════
 const CATEGORIES = [
   {
-    id: 'rain',            // 半角英数（URL・IDに使用。他と被らないこと）
-    label: 'Rainy Days',   // タブ・ボタン・ページタイトルに表示
-    topTitle: 'Wet City<br>Nights',
-    topDesc:  '傘の色が夜を照らす。雨の日だけが持つ、静かな劇場性。',
-
-    // ── テーマカラー ──────────────────────────────
-    theme: {
-      accent:      '#d42020',          // メインカラー（タイトル・ドット・タブ下線）
-      accentL:     '#e85050',          // 薄め（タグ文字色）
-      accentD:     '#8a1010',          // 濃いめ（タグ枠線・Load Moreボーダー）
-      bg:          '#080c14',          // ページ背景
-      placeholder: '#0e1420',          // 画像なし時のセル背景
-      phStroke:    '#3a4a62',          // プレースホルダーのSVG/テキスト色
-      border:      'rgba(255,255,255,0.06)', // 区切り線
-      muted:       '#3a4a62',          // ナビ・タブの非アクティブ文字色
-      text:        '#8aaac8',          // 本文テキスト色
-      capGrad:     'rgba(4,6,12,0.8)', // 写真ホバー時グラデ色
-      headerBg:    'rgba(8,12,20,0.85)',
-      headerBorder:'rgba(255,255,255,0.06)',
-      logoColor:   'rgba(255,255,255,0.9)',
+    "id": "rain",
+    "label": "Rainy Days",
+    "topTitle": "Wet City<br>Nights",
+    "topDesc": "傘の色が夜を照らす。雨の日だけが持つ、静かな劇場性。",
+    "theme": {
+      "accent": "#d42020",
+      "accentL": "#e85050",
+      "accentD": "#8a1010",
+      "bg": "#080c14",
+      "placeholder": "#0e1420",
+      "phStroke": "#3a4a62",
+      "border": "rgba(255,255,255,0.06)",
+      "muted": "#3a4a62",
+      "text": "#8aaac8",
+      "capGrad": "rgba(4,6,12,0.8)",
+      "headerBg": "rgba(8,12,20,0.85)",
+      "headerBorder": "rgba(255,255,255,0.06)",
+      "logoColor": "rgba(255,255,255,0.9)"
     },
-
-    // ── デコレーションHTML（省略可。空文字''でシンプルなラインのみ） ──
-    decoHTML: '',
-
-    // ── 写真リスト（最大500枚） ───────────────────
-    // src     : 画像パス（例: 'rain/001.jpg'）。空なら仮表示
-    // title   : タイトル（ホバー時・仮表示に出る）
-    // featured: true にするとトップのスライドショーに使用（2〜3枚推奨）
-    photos: [
-      {src:'rain/2BE98E27-9D7D-44C1-A985-9306CC12FB45_SDI9401_2.JPG', title:'Red Umbrella, Staircase'},
-      {src:'rain/88E82653-CECF-4F1A-940E-E44F0FC3B174_3.JPG', title:'Night, Crossing'},
-      {src:'rain/5F324229-4A39-4134-9752-5053E66B3B66_2.JPG', title:'Orange Umbrella'},
-      {src:'rain/6C5DAD91-E2FB-46B7-9B65-2673C04BE78C.JPG', title:'Neon Puddle'},
-      {src:'rain/6CF62ADA-DD79-475A-BB8A-698F6D502B1B.JPG', title:'Yellow Umbrella'},
-      {src:'rain/7E4D07EE-11EA-4455-A20A-C12749A6C8F7DSC06988.JPG', title:'Glow'},
-      {src:'rain/7E023F6A-6B29-4529-B1DF-F198899B9B42_2.JPG', title:'Descent'},
-      {src:'rain/7F59C887-D2B8-443D-9D0D-354AC9B9ADC8_2.JPG', title:'Red dot, Night'},
-      {src:'rain/9BCA6E56-C105-42A9-8026-0399035DE6D7_2.JPG', title:'Tokyo Rain'},
-      {src:'rain/21DCCA12-9441-4AE1-8419-5BE09C149910.JPG', title:''},
-      {src:'rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG', title:'', featured:true},
-      {src:'rain/58EE0A4A-E815-4F62-AC91-AAF78B2FA852.JPG', title:''},
-      {src:'rain/83B12AB3-898F-44D2-8BA4-BF2CA7162AE1.JPG', title:''},
-      {src:'rain/95A4A008-C9BA-4549-9F99-15F4CBCCAD9E_3.JPG', title:''},
-      {src:'rain/98BA6881-8746-4014-80A2-4EA3556E7F4B_6.JPG', title:''},
-      {src:'rain/537A5D4C-131B-4FE7-8149-6108EBCD4A24.JPG', title:''},
-      {src:'rain/617B2FF7-1AE5-4F54-80FD-6E0FF79C3A68.JPG', title:''},
-      {src:'rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG', title:'', featured:true},
-      {src:'rain/1570CB82-7BF7-4CA6-9F82-A00D4A3EA97E.JPG', title:''},
-      {src:'rain/994F69B6-4F80-4685-987A-94BCE603D2ED.JPG', title:''},
-      {src:'rain/6698BD0C-8ADB-4583-81BA-CD66EF50A0CD.JPG', title:''},
-      {src:'rain/8479B09B-2158-4D9A-9F4D-D179620B64F9.JPG', title:''},
-      {src:'rain/9842DE86-0C7D-4D74-BCE6-C4D16D63D40E.JPG', title:''},
-      {src:'rain/9938EC85-54E4-4808-81C9-35E055340624_3.JPG', title:''},
-      {src:'rain/A0C79CAD-A3B4-43F3-AD1F-02EDD26022B1.JPG', title:''},
-      {src:'rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG', title:'', featured:true},
-      {src:'rain/A82B1604-98A6-4184-A92D-1E0061DD4434.JPG', title:''},
-      {src:'rain/A994C388-CCB0-4EA4-811A-CB211FE968B7.JPG', title:''},
-    ],
+    "decoHTML": "",
+    "photos": [
+      {
+        "src": "rain/2BE98E27-9D7D-44C1-A985-9306CC12FB45_SDI9401_2.JPG",
+        "title": "Red Umbrella, Staircase"
+      },
+      {
+        "src": "rain/88E82653-CECF-4F1A-940E-E44F0FC3B174_3.JPG",
+        "title": "Night, Crossing"
+      },
+      {
+        "src": "rain/5F324229-4A39-4134-9752-5053E66B3B66_2.JPG",
+        "title": "Orange Umbrella"
+      },
+      {
+        "src": "rain/6C5DAD91-E2FB-46B7-9B65-2673C04BE78C.JPG",
+        "title": "Neon Puddle"
+      },
+      {
+        "src": "rain/6CF62ADA-DD79-475A-BB8A-698F6D502B1B.JPG",
+        "title": "Yellow Umbrella"
+      },
+      {
+        "src": "rain/7E4D07EE-11EA-4455-A20A-C12749A6C8F7DSC06988.JPG",
+        "title": "Glow"
+      },
+      {
+        "src": "rain/7E023F6A-6B29-4529-B1DF-F198899B9B42_2.JPG",
+        "title": "Descent"
+      },
+      {
+        "src": "rain/7F59C887-D2B8-443D-9D0D-354AC9B9ADC8_2.JPG",
+        "title": "Red dot, Night"
+      },
+      {
+        "src": "rain/9BCA6E56-C105-42A9-8026-0399035DE6D7_2.JPG",
+        "title": "Tokyo Rain"
+      },
+      {
+        "src": "rain/21DCCA12-9441-4AE1-8419-5BE09C149910.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "rain/58EE0A4A-E815-4F62-AC91-AAF78B2FA852.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/83B12AB3-898F-44D2-8BA4-BF2CA7162AE1.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/95A4A008-C9BA-4549-9F99-15F4CBCCAD9E_3.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/98BA6881-8746-4014-80A2-4EA3556E7F4B_6.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/537A5D4C-131B-4FE7-8149-6108EBCD4A24.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/617B2FF7-1AE5-4F54-80FD-6E0FF79C3A68.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "rain/1570CB82-7BF7-4CA6-9F82-A00D4A3EA97E.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/994F69B6-4F80-4685-987A-94BCE603D2ED.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/6698BD0C-8ADB-4583-81BA-CD66EF50A0CD.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/8479B09B-2158-4D9A-9F4D-D179620B64F9.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/9842DE86-0C7D-4D74-BCE6-C4D16D63D40E.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/9938EC85-54E4-4808-81C9-35E055340624_3.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/A0C79CAD-A3B4-43F3-AD1F-02EDD26022B1.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "rain/A82B1604-98A6-4184-A92D-1E0061DD4434.JPG",
+        "title": ""
+      },
+      {
+        "src": "rain/A994C388-CCB0-4EA4-811A-CB211FE968B7.JPG",
+        "title": ""
+      }
+    ]
   },
-
   {
-    id: 'int',
-    label: 'Our Paradise',
-    topTitle: 'My Room,<br>My Rules.',
-    topDesc:  'ごちゃごちゃしてるのに、なぜか居心地がいい。そんな部屋のつくり方。',
-    theme: {
-      accent:      '#3a8aaa',
-      accentL:     '#c4e8f5',
-      accentD:     '#3a8aaa',
-      bg:          '#f5f2ec',
-      placeholder: '#c4e8f5',
-      phStroke:    '#3a8aaa',
-      border:      'rgba(58,138,170,0.18)',
-      muted:       '#6e7a8a',
-      text:        '#1e2430',
-      capGrad:     'rgba(20,20,20,0.5)',
-      headerBg:    'rgba(245,242,236,0.92)',
-      headerBorder:'rgba(58,138,170,0.2)',
-      logoColor:   '#3a8aaa',
+    "id": "int",
+    "label": "Our Paradise",
+    "topTitle": "My Room,<br>My Rules.",
+    "topDesc": "ごちゃごちゃしてるのに、なぜか居心地がいい。そんな部屋のつくり方。",
+    "theme": {
+      "accent": "#3a8aaa",
+      "accentL": "#c4e8f5",
+      "accentD": "#3a8aaa",
+      "bg": "#f5f2ec",
+      "placeholder": "#c4e8f5",
+      "phStroke": "#3a8aaa",
+      "border": "rgba(58,138,170,0.18)",
+      "muted": "#6e7a8a",
+      "text": "#1e2430",
+      "capGrad": "rgba(20,20,20,0.5)",
+      "headerBg": "rgba(245,242,236,0.92)",
+      "headerBorder": "rgba(58,138,170,0.2)",
+      "logoColor": "#3a8aaa"
     },
-    decoHTML: '',
-    photos: [
-      {src:'int/_SDI9133.JPG', title:'Corner'},
-      {src:'int/_SDI9253.JPG', title:'Desk', featured:true},
-      {src:'int/_SDI9226.JPG', title:'Plants', featured:true},
-      {src:'int/_SDI9224.JPG', title:'Bed'},
-      {src:'int/_SDI8174_2.JPG', title:'Books', featured:true},
-      {src:'', title:'Detail'},
-      {src:'', title:'Mirror'},
-      {src:'', title:'Window'},
-    ],
+    "decoHTML": "",
+    "photos": [
+      {
+        "src": "int/_SDI9133.JPG",
+        "title": "Corner"
+      },
+      {
+        "src": "int/_SDI9253.JPG",
+        "title": "Desk",
+        "featured": true
+      },
+      {
+        "src": "int/_SDI9226.JPG",
+        "title": "Plants",
+        "featured": true
+      },
+      {
+        "src": "int/_SDI9224.JPG",
+        "title": "Bed"
+      },
+      {
+        "src": "int/_SDI8174_2.JPG",
+        "title": "Books",
+        "featured": true
+      },
+      {
+        "src": "images/int/",
+        "title": "Detail"
+      },
+      {
+        "src": "images/int/",
+        "title": "Mirror"
+      },
+      {
+        "src": "images/int/",
+        "title": "Window"
+      }
+    ]
   },
-
   {
-    id: 'snap',
-    label: 'Through My Eyes',
-    topTitle: 'Every Day,<br>Somewhere.',
-    topDesc:  '日常のなかにある、見逃しそうな美しさ。リスボン、富士山、どこかの街角。',
-    theme: {
-      accent:      '#1a6640',
-      accentL:     '#a8d8be',
-      accentD:     '#1a6640',
-      bg:          '#f4faf5',
-      placeholder: '#e8f4ea',
-      phStroke:    '#aacab4',
-      border:      'rgba(76,175,125,0.2)',
-      muted:       '#6e7a8a',
-      text:        '#1e2430',
-      capGrad:     'rgba(20,50,30,0.45)',
-      headerBg:    'rgba(244,250,245,0.92)',
-      headerBorder:'rgba(76,175,125,0.2)',
-      logoColor:   '#1a6640',
+    "id": "snap",
+    "label": "Through My Eyes",
+    "topTitle": "Every Day,<br>Somewhere.",
+    "topDesc": "日常のなかにある、見逃しそうな美しさ。リスボン、富士山、どこかの街角。",
+    "theme": {
+      "accent": "#1a6640",
+      "accentL": "#a8d8be",
+      "accentD": "#1a6640",
+      "bg": "#f4faf5",
+      "placeholder": "#e8f4ea",
+      "phStroke": "#aacab4",
+      "border": "rgba(76,175,125,0.2)",
+      "muted": "#6e7a8a",
+      "text": "#1e2430",
+      "capGrad": "rgba(20,50,30,0.45)",
+      "headerBg": "rgba(244,250,245,0.92)",
+      "headerBorder": "rgba(76,175,125,0.2)",
+      "logoColor": "#1a6640"
     },
-    decoHTML: '',
-    photos: [
-      {src:'snap/6B33485A-8DE9-48B6-9A46-CE56BE059D49_SDI6534.JPG', title:'Lisbon, 2023'},
-      {src:'snap/A009FDF6-699D-4975-955D-7696978AD00D_SDI6773.JPG', title:'Porto, 2023'},
-      {src:'snap/C3F21240-F1EC-4996-BD79-AB09A512EEB3_SDI9804.JPG', title:'Mt. Fuji'},
-      {src:'snap/0A90F2C0-D592-4E17-81F6-F88D9F0EE6A5_SDI0694.JPG', title:'Tram'},
-      {src:'snap/0D398A2D-C956-490B-967B-F8BC90B9CCC3_SDI5962.JPG', title:'Arch, Lisbon'},
-      {src:'snap/0F968D47-9E33-4BEF-9B92-0F49AED023C0_SDI7073.JPG', title:'Riverside'},
-      {src:'snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG', title:'', featured:true},
-      {src:'snap/3B520B4D-6CA0-414A-B86D-A0E184D6A904_SDI7488.JPG', title:''},
-      {src:'snap/3B744148-068F-4D09-8823-8E8A4D5FEE46_SDI0667.JPG', title:''},
-      {src:'snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG', title:'', featured:true},
-      {src:'snap/4FED618D-C376-4079-AB79-4F2E2AFEB8AC_SDI5824.JPG', title:''},
-      {src:'snap/5F3270F0-7D81-4B8C-BB34-9421468FDDD9_SDI5685.JPG', title:''},
-      {src:'snap/6C569A72-8DFE-43B9-983A-9377B842047B_SDI6645.JPG', title:''},
-      {src:'snap/6F450886-F1D6-4A11-8A4F-1F7CA145670C_SDI6358.JPG', title:''},
-      {src:'snap/08BE003E-108D-487E-9B63-AA70C69093F1_SDI6816.JPG', title:''},
-      {src:'snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG', title:'', featured:true},
-      {src:'snap/58E3C4C6-60E7-4705-B2F4-928B09FE60DD_SDI6872.JPG', title:''},
-      {src:'snap/69C09859-E003-48ED-B10E-7D594DC631BA_SDI7076.JPG', title:''},
-      {src:'snap/72F5EA09-C7ED-4DC9-ACCA-6592ED3CA54B_SDI9954.JPG', title:''},
-      {src:'snap/80BCCA18-DC0D-4B37-B389-21916EB708E6_SDI9603.JPG', title:''},
-    ],
-  },
-
-  // ── 新しいカテゴリはここに追加（以下はサンプル） ──────────────
-  // {
-  //   id: 'night',
-  //   label: 'Night City',
-  //   topTitle: 'After Dark.',
-  //   topDesc: '夜の街の説明文。',
-  //   theme: {
-  //     accent:      '#a855f7',
-  //     accentL:     '#d8b4fe',
-  //     accentD:     '#7e22ce',
-  //     bg:          '#0f0a1a',
-  //     placeholder: '#1a1030',
-  //     phStroke:    '#6b5a8a',
-  //     border:      'rgba(168,85,247,0.12)',
-  //     muted:       '#6b5a8a',
-  //     text:        '#c4b5fd',
-  //     capGrad:     'rgba(10,4,20,0.8)',
-  //     headerBg:    'rgba(15,10,26,0.85)',
-  //     headerBorder:'rgba(168,85,247,0.12)',
-  //   },
-  //   decoHTML: '',   // 空でもOK
-  //   photos: [
-  //     {src:'images/night/001.jpg', title:'Shinjuku 3AM', featured:true},
-  //     {src:'images/night/002.jpg', title:'Neon Alley'},
-  //   ],
-  // },
+    "decoHTML": "",
+    "photos": [
+      {
+        "src": "snap/6B33485A-8DE9-48B6-9A46-CE56BE059D49_SDI6534.JPG",
+        "title": "Lisbon, 2023"
+      },
+      {
+        "src": "snap/A009FDF6-699D-4975-955D-7696978AD00D_SDI6773.JPG",
+        "title": "Porto, 2023"
+      },
+      {
+        "src": "snap/C3F21240-F1EC-4996-BD79-AB09A512EEB3_SDI9804.JPG",
+        "title": "Mt. Fuji"
+      },
+      {
+        "src": "snap/0A90F2C0-D592-4E17-81F6-F88D9F0EE6A5_SDI0694.JPG",
+        "title": "Tram"
+      },
+      {
+        "src": "snap/0D398A2D-C956-490B-967B-F8BC90B9CCC3_SDI5962.JPG",
+        "title": "Arch, Lisbon"
+      },
+      {
+        "src": "snap/0F968D47-9E33-4BEF-9B92-0F49AED023C0_SDI7073.JPG",
+        "title": "Riverside"
+      },
+      {
+        "src": "snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "snap/3B520B4D-6CA0-414A-B86D-A0E184D6A904_SDI7488.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/3B744148-068F-4D09-8823-8E8A4D5FEE46_SDI0667.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "snap/4FED618D-C376-4079-AB79-4F2E2AFEB8AC_SDI5824.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/5F3270F0-7D81-4B8C-BB34-9421468FDDD9_SDI5685.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/6C569A72-8DFE-43B9-983A-9377B842047B_SDI6645.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/6F450886-F1D6-4A11-8A4F-1F7CA145670C_SDI6358.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/08BE003E-108D-487E-9B63-AA70C69093F1_SDI6816.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG",
+        "title": "",
+        "featured": true
+      },
+      {
+        "src": "snap/58E3C4C6-60E7-4705-B2F4-928B09FE60DD_SDI6872.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/69C09859-E003-48ED-B10E-7D594DC631BA_SDI7076.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/72F5EA09-C7ED-4DC9-ACCA-6592ED3CA54B_SDI9954.JPG",
+        "title": ""
+      },
+      {
+        "src": "snap/80BCCA18-DC0D-4B37-B389-21916EB708E6_SDI9603.JPG",
+        "title": ""
+      }
+    ]
+  }
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -2217,7 +2440,7 @@ function downloadUpdatedHTML() {
   let newHTML = docHTML.replace(catsRe, newCatsJS);
 
   // 念のためadmin-overlayのstyle="display:..."を消す
-  newHTML = newHTML.replace(/(<div id="admin-overlay")[^>]*>/, '$1>');
+  newHTML = newHTML.replace(/(<div id="admin-overlay">]*>/, '$1>');
 
   // Admin表示を元に戻す
   overlay.style.display = prevDisplay;
@@ -2323,7 +2546,7 @@ window.adminToggleMini = adminToggleMini;
 #admin-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#d42020;color:#fff;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;padding:8px 24px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:100000}
 </style>
 
-<div id="admin-overlay">
+<div id="admin-overlay" class="" style="display: none;">
   <div id="admin-bar">
     <span id="admin-bar-title">i_dauyu — Admin</span>
     <button class="a-btn" id="admin-mini-btn" onclick="adminToggleMini()">サイトを見ながら編集 ↑</button>
@@ -2332,19 +2555,19 @@ window.adminToggleMini = adminToggleMini;
     <button class="a-btn" onclick="adminClose()">Close ✕</button>
   </div>
   <div class="admin-tab-bar">
-    <button class="admin-tab active" id="admin-tab-works" onclick="adminSwitchTab('works')">Works</button>
-    <button class="admin-tab" id="admin-tab-slides" onclick="adminSwitchTab('slides')">Slides</button>
+    <button class="admin-tab" id="admin-tab-works" onclick="adminSwitchTab('works')">Works</button>
+    <button class="admin-tab active" id="admin-tab-slides" onclick="adminSwitchTab('slides')">Slides</button>
     <button class="admin-tab" id="admin-tab-pages" onclick="adminSwitchTab('pages')">Pages</button>
   </div>
-  <div id="admin-body"></div>
-  <div id="admin-export-area">
+  <div id="admin-body"><div style="padding: 20px 28px 8px; font-size: 9px; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.3);">TOP SLIDESHOW — スマホ表示の位置調整</div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/57FCA993-6D5F-4F2E-B368-17C13AA7FF57_4.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 80% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">80.0% 50.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/298F1752-7279-4818-8844-8A01CB6CF4C9_2.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="rain/A34B7041-9BB8-4413-8D4A-B44E9CA7C484_10.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 24.3% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Rainy Days</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">24.3% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI9253.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Desk  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI9226.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 54.6% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Plants  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">54.6% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="int/_SDI8174_2.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 52.7% 0%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">Books  —  Our Paradise</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">52.7% 0.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/1CB0AFEF-03E1-48F8-BB9E-63B5C2A1A8BA_SDI7044.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/3EC61A0C-9CB0-4C4F-A3DD-0D486676D684_SDI7470.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">50% 50%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);"><div style="flex-shrink: 0; width: 90px; height: 160px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.15); position: relative; cursor: grab;"><img src="snap/36C983B8-AF40-4198-939B-5F7247759B53_SDI5904.JPG" style="width: 100%; height: 100%; object-fit: cover; object-position: 42% 100%; pointer-events: none;"></div><div style="flex: 1 1 0%; display: flex; flex-direction: column; gap: 10px;"><div style="font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7);">(no title)  —  Through My Eyes</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.3);">42.0% 100.0%</div><div style="font-size: 9px; color: rgba(255, 255, 255, 0.25); line-height: 1.8;">← プレビューをドラッグして位置調整</div><button class="a-btn">Reset</button></div></div><div style="padding: 20px 28px;"><button class="a-btn red">Apply — サイトに反映</button></div></div>
+  <div id="admin-export-area" style="display: none;">
     <div id="admin-export-inner">
       <div id="admin-export-label">EXPORT JSON — HTMLのphotosに貼り付けて永続化できます</div>
-      <textarea id="admin-export-text" readonly></textarea>
+      <textarea id="admin-export-text" readonly=""></textarea>
       <button class="a-btn" onclick="adminCopyExport()">Copy to Clipboard</button>
     </div>
   </div>
-  <div id="admin-toast"></div>
+  <div id="admin-toast" style="opacity: 0;">Applied!</div>
 </div>
 
 <style>
@@ -2412,16 +2635,17 @@ window.adminToggleMini = adminToggleMini;
   </div>
 </div>
 
-<div id="lightbox" onclick="lightboxClose()">
+<div id="lightbox" onclick="lightboxClose()" class="" style="display: none;">
   <div id="lightbox-inner" onclick="event.stopPropagation()">
-    <img id="lb-img" src="" alt="">
+    <img id="lb-img" src="rain/21DCCA12-9441-4AE1-8419-5BE09C149910.JPG" alt="">
     <div id="lb-meta">
       <span id="lb-title"></span>
-      <span id="lb-tag"></span>
+      <span id="lb-tag">Rainy Days</span>
     </div>
   </div>
   <button id="lb-close" onclick="lightboxClose()">Close</button>
 </div>
 
-</body>
-</html>
+
+
+</body></html>
