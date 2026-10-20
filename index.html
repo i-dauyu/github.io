@@ -193,10 +193,6 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 .about-body{font-size:11px;line-height:2.1;color:rgba(255,255,255,0.45);
   letter-spacing:0.06em;padding:0 40px;margin-bottom:32px;margin-top:0}
 .about-body p{margin-bottom:20px}
-.about-divider{width:40px;height:1px;background:rgba(255,255,255,0.12);margin:0 40px 32px}
-.about-tags{display:flex;flex-wrap:wrap;gap:8px;padding:0 40px}
-.about-tag{font-size:9px;letter-spacing:0.15em;padding:4px 12px;
-  border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.35)}
 
 /* Contact / Shop: リスト */
 .contact-list{display:flex;flex-direction:column;padding:0 40px;margin-top:0}
@@ -321,15 +317,6 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
     <div class="about-body">
       <p>写真家・i_dauyu。雨の夜、誰かの部屋、見知らぬ街角。日常の中に潜む静かな劇場性を追いかけています。</p>
       <p>ここに自己紹介文を入れてください。</p>
-    </div>
-    <div class="about-divider"></div>
-    <div class="about-tags">
-      <span class="about-tag">Rain</span>
-      <span class="about-tag">Tokyo</span>
-      <span class="about-tag">Room</span>
-      <span class="about-tag">Wander</span>
-      <span class="about-tag">Snap</span>
-      <span class="about-tag">Travel</span>
     </div>
   </div>
 
@@ -3181,7 +3168,7 @@ const FONT_TARGETS = [
   {key:'catBtn',  label:'カテゴリボタン',    selectors:['.cat-btn','.cat-tab']},
   {key:'section', label:'Workタイトル',      selectors:['.section-title']},
   {key:'aboutTitle',   label:'About タイトル',   selectors:['#about-page .page-title']},
-  {key:'aboutBody',    label:'About 本文',        selectors:['#about-page .about-body','#about-page .about-tags']},
+  {key:'aboutBody',    label:'About 本文',        selectors:['#about-page .about-body']},
   {key:'contactTitle', label:'Contact タイトル',  selectors:['#contact-page .page-title']},
   {key:'contactBody',  label:'Contact 本文',      selectors:['#contact-page .contact-item','#contact-page .contact-label']},
   {key:'shop',         label:'Shop',              selectors:['#shop-page .page-title']},
@@ -3353,7 +3340,6 @@ function adminRenderPages(body) {
         {label:'Name', selector:'#about-page .page-title'},
         {label:'Bio 1', selector:'#about-page .about-body p:first-child'},
         {label:'Bio 2', selector:'#about-page .about-body p:last-child'},
-        {label:'Tags (カンマ区切り)', selector:'#about-page .about-tags', isTags:true},
       ]
     },
     {
@@ -3389,13 +3375,7 @@ function adminRenderPages(body) {
       const inp = document.createElement('input');
       inp.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#fff;font-family:Geist Mono,monospace;font-size:10px;padding:6px 10px;outline:none;flex:1';
       const el = document.querySelector(f.selector);
-      if (f.isTags) {
-        inp.value = [...document.querySelectorAll('#about-page .about-tag')].map(t => t.textContent).join(', ');
-        inp.onchange = function() {
-          const tagsWrap = document.querySelector('#about-page .about-tags');
-          if (tagsWrap) tagsWrap.innerHTML = this.value.split(',').map(t => `<span class="about-tag">${t.trim()}</span>`).join('');
-        };
-      } else if (f.isHref) {
+      if (f.isHref) {
         inp.value = el?.getAttribute('href')?.replace('mailto:','') || '';
         inp.onchange = function() {
           const a = document.querySelector('#contact-email');
@@ -4018,7 +3998,7 @@ function downloadUpdatedHTML() {
             catBtn: '.cat-btn,.cat-tab',
             section: '.section-title',
             aboutTitle: '#about-page .page-title',
-            aboutBody: '#about-page .about-body,#about-page .about-tags',
+            aboutBody: '#about-page .about-body',
             contactTitle: '#contact-page .page-title',
             contactBody: '#contact-page .contact-item,#contact-page .contact-label',
             shop: '#shop-page .page-title',
