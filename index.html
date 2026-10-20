@@ -193,6 +193,8 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 .about-body{font-size:11px;line-height:2.1;color:rgba(255,255,255,0.45);
   letter-spacing:0.06em;padding:0 40px;margin-bottom:32px;margin-top:0}
 .about-body p{margin-bottom:20px}
+.about-en{padding-top:28px;position:relative}
+.about-en::before{content:'';position:absolute;top:0;left:40px;width:40px;height:1px;background:rgba(255,255,255,0.12)}
 
 /* Contact / Shop: リスト */
 .contact-list{display:flex;flex-direction:column;padding:0 40px;margin-top:0}
@@ -314,9 +316,13 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
         </div>
       </div>
     </div>
-    <div class="about-body">
-      <p>写真家・i_dauyu。雨の夜、誰かの部屋、見知らぬ街角。日常の中に潜む静かな劇場性を追いかけています。</p>
-      <p>ここに自己紹介文を入れてください。</p>
+    <div class="about-body about-ja">
+      <p>写真家・ルームスタイリスト、i_dauyu。雨の夜、誰かの部屋、見知らぬ街角。日常の中に潜む静かな劇場性を追いかけています。</p>
+      <p>人や空間がまとう空気を、そのまま写真に残すこと。部屋をしつらえ、光を整え、その場所にしかない一場面をつくります。ブランディング撮影やプロフィール撮影から、インテリアのスタイリングまで、ご依頼に合わせてお手伝いします。</p>
+    </div>
+    <div class="about-body about-en" lang="en">
+      <p>i_dauyu — photographer and room stylist. Rainy nights, someone's room, an unfamiliar street corner. I chase the quiet theatre hidden in everyday life.</p>
+      <p>I capture the atmosphere that people and spaces carry, just as it is. Styling the room and shaping the light, I create scenes that could only exist in that place. From branding and portrait shoots to interior styling, I'm happy to help with your project.</p>
     </div>
   </div>
 
@@ -3338,8 +3344,10 @@ function adminRenderPages(body) {
       fontKey2: 'aboutBody',
       fields: [
         {label:'Name', selector:'#about-page .page-title'},
-        {label:'Bio 1', selector:'#about-page .about-body p:first-child'},
-        {label:'Bio 2', selector:'#about-page .about-body p:last-child'},
+        {label:'Bio 1', selector:'#about-page .about-ja p:first-child'},
+        {label:'Bio 2', selector:'#about-page .about-ja p:last-child'},
+        {label:'Bio EN 1', selector:'#about-page .about-en p:first-child'},
+        {label:'Bio EN 2', selector:'#about-page .about-en p:last-child'},
       ]
     },
     {
