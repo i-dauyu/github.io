@@ -2729,6 +2729,10 @@ function autoLoadCheck(el) {
 function lightboxOpen(photo) {
   const isVideo = !!(photo.video || /\.(mp4|mov|webm)$/i.test(photo.src||''));
   const inner = document.getElementById('lightbox-inner');
+  const lb = document.getElementById('lightbox');
+  // 読み込みが終わるまで写真とタイトルを隠してローディングを出す
+  lb.classList.add('loading');
+  const loaded = () => lb.classList.remove('loading');
   // 既存のvideo/imgを削除して差し替え
   const oldMedia = inner.querySelector('img, video');
   if (isVideo) {
@@ -2738,6 +2742,8 @@ function lightboxOpen(photo) {
     vid.controls = true;
     vid.autoplay = true;
     vid.style.cssText = 'display:block;max-width:90vw;max-height:82vh;object-fit:contain;';
+    vid.addEventListener('loadeddata', loaded, {once: true});
+    vid.addEventListener('error', loaded, {once: true});
     if (oldMedia) oldMedia.replaceWith(vid);
     else inner.insertBefore(vid, inner.firstChild);
   } else {
@@ -2748,11 +2754,14 @@ function lightboxOpen(photo) {
       newImg.style.cssText = 'display:block;max-width:90vw;max-height:82vh;object-fit:contain;';
       img.replaceWith(newImg);
     }
-    document.getElementById('lb-img').src = photo.src;
+    const lbImg = document.getElementById('lb-img');
+    lbImg.onload = loaded;
+    lbImg.onerror = loaded;
+    lbImg.src = photo.src;
+    if (lbImg.complete && lbImg.naturalWidth) loaded();
   }
-  document.getElementById('lb-title').textContent = photo.title;
-  document.getElementById('lb-tag').textContent = photo.tag;
-  const lb = document.getElementById('lightbox');
+  document.getElementById('lb-title').textContent = photo.title || '';
+  document.getElementById('lb-tag').textContent = photo.tag || '';
   lb.style.display = 'flex';
   requestAnimationFrame(() => lb.classList.add('open'));
   document.body.style.overflow = 'hidden';
@@ -4258,14 +4267,22 @@ window.adminToggleMini = adminToggleMini;
   background:rgba(0,0,0,0);align-items:center;justify-content:center;
   transition:background 0.3s;cursor:default;
 }
-#lightbox *{cursor:default}
-#lb-close{cursor:pointer !important}
+#lightbox,#lightbox *{cursor:zoom-out}
 #lightbox.open{background:rgba(0,0,0,0.92)}
 #lightbox-inner{
   position:relative;max-width:90vw;max-height:90vh;
-  opacity:0;transform:scale(0.96);transition:opacity 0.3s,transform 0.3s;
+  opacity:0;transform:scale(0.98);transition:opacity 0.6s ease,transform 0.6s ease;
 }
 #lightbox.open #lightbox-inner{opacity:1;transform:scale(1)}
+/* 読み込み中は写真もタイトルも出さず、細い線のローディングだけ見せる */
+#lightbox.open.loading #lightbox-inner{opacity:0;transform:scale(0.98)}
+#lb-loader{position:absolute;left:50%;top:50%;width:82px;height:1px;margin-left:-41px;overflow:hidden;
+  background:rgba(255,255,255,0.1);opacity:0;transition:opacity 0.6s ease;pointer-events:none}
+#lightbox.open.loading #lb-loader{opacity:1}
+#lightbox.loading #lb-meta{visibility:hidden}
+#lb-loader span{position:absolute;top:0;left:0;width:40%;height:100%;background:rgba(255,255,255,0.85);
+  animation:lb-zoom 1.4s ease-in-out infinite}
+@keyframes lb-zoom{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
 #lb-img{display:block;max-width:90vw;max-height:82vh;object-fit:contain;}
 #lb-meta{
   display:flex;justify-content:space-between;align-items:center;
@@ -4273,13 +4290,6 @@ window.adminToggleMini = adminToggleMini;
 }
 #lb-title{font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,0.8)}
 #lb-tag{font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.3)}
-#lb-close{
-  position:fixed;top:24px;right:28px;
-  background:none;border:none;color:rgba(255,255,255,0.4);
-  font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.2em;
-  cursor:pointer;transition:color 0.2s;
-}
-#lb-close:hover{color:#fff}
 </style>
 
 <style>
@@ -4317,14 +4327,14 @@ window.adminToggleMini = adminToggleMini;
 </div>
 
 <div id="lightbox" onclick="lightboxClose()" class="" style="display: none;">
-  <div id="lightbox-inner" onclick="event.stopPropagation()">
-    <img id="lb-img" src="life/FA1DE585-B459-4843-9AFC-0A89822C2AE5.JPG" alt="">
+  <div id="lightbox-inner">
+    <img id="lb-img" alt="">
     <div id="lb-meta">
       <span id="lb-title"></span>
-      <span id="lb-tag">Daily Life</span>
+      <span id="lb-tag"></span>
     </div>
   </div>
-  <button id="lb-close" onclick="lightboxClose()">Close</button>
+  <div id="lb-loader" aria-hidden="true"><span></span></div>
 </div>
 
 
