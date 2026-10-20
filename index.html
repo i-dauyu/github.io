@@ -82,8 +82,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   transform:scaleX(0);transition:transform 0.3s;background:var(--btn-accent,#fff)}
 .cat-btn:hover,.cat-btn.current{background:rgba(10,10,10,0.88);color:rgba(255,255,255,0.9)}
 .cat-btn:hover::before,.cat-btn.current::before{transform:scaleX(1)}
-.cat-btn-label{display:block;margin-bottom:6px}
-.cat-btn-count{font-size:8px;opacity:0.4;letter-spacing:0.12em;font-family:'Geist Mono',monospace}
+.cat-btn-label{display:block}
 
 /* ─── PORTFOLIO ─── */
 #portfolio{position:relative;padding-top:56px;padding-bottom:60px}
@@ -2155,7 +2154,6 @@ function buildTopButtons() {
         style="--btn-accent:${c.theme.accent}"
         onclick="goPortfolio('${c.id}')">
         <span class="cat-btn-label">${c.label}</span>
-        <span class="cat-btn-count" id="top-count-${c.id}">— photos</span>
       </button>`);
   });
 }
@@ -2163,11 +2161,9 @@ function buildTopButtons() {
 function buildTabs() {
   const tabs = document.getElementById('cat-tabs');
   CATEGORIES.forEach(c => {
-    const n = Math.min(c.photos.length, MAX);
     tabs.insertAdjacentHTML('beforeend', `
       <button class="cat-tab" id="tab-${c.id}" onclick="showPage('${c.id}')">
         <span class="cat-btn-label">${c.label}</span>
-        <span class="cat-btn-count" id="tab-count-${c.id}">${n} photos</span>
       </button>`);
   });
 }
@@ -2279,9 +2275,6 @@ function buildTopSlides() {
     indicators.appendChild(dot);
   });
 
-  CATEGORIES.forEach(c => {
-    document.getElementById('top-count-' + c.id).textContent = Math.min(c.photos.length, MAX) + ' photos';
-  });
   if (slides.length) updateTopText(slides[0].catId);
   document.getElementById('topbtn-' + slides[0]?.catId)?.classList.add('current');
   if (slides.length > 1) {
