@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>i_dauyu — Photography</title>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&amp;family=Geist+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Geist+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -86,7 +86,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
 
 /* top ボタン群 */
 .cat-buttons{display:flex;justify-content:center;gap:0;position:absolute;bottom:0;left:0;right:0;z-index:20;
-  background:linear-gradient(to top,rgba(5,7,12,0.75),rgba(5,7,12,0));
+  background:linear-gradient(to top,rgba(5,7,12,0.45),rgba(5,7,12,0));
   padding-bottom:calc(12px + env(safe-area-inset-bottom))}
 .cat-btn{width:200px;flex:none;padding:16px 16px 18px;
   background:none;border:none;border-right:1px solid rgba(255,255,255,0.08);
@@ -97,7 +97,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .cat-btn::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   transform:scaleX(0);transition:transform 0.35s ease;background:var(--btn-accent,#fff)}
 .cat-btn:hover{color:rgba(255,255,255,0.8)}
-.cat-btn.current{color:rgba(255,255,255,0.95)}
+.cat-btn.current{color:#fff;font-weight:600}
 .cat-btn.current::before{transform:scaleX(1)}
 .cat-btn-label{display:block}
 
@@ -119,7 +119,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
   color:rgba(255,255,255,0.85);text-shadow:0 1px 3px rgba(0,0,0,0.5)}
 .cat-tab:first-child{border-left:1px solid rgba(255,255,255,0.08)}
 .cat-tab:hover{color:#fff}
-.cat-tab.active{color:#fff}
+.cat-tab.active{color:#fff;font-weight:600}
 .cat-tab::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   transform:scaleX(0);transition:transform 0.35s ease;background:var(--theme-accent,#d42020)}
 .cat-tab.active::before{transform:scaleX(1);height:1.5px}
@@ -222,20 +222,22 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .arr{transition:transform 0.2s}
 
 /* footer — 画面最下部に固定 */
+/* SNS — Work の下タブと同じ見た目 */
 .site-footer{
-  display:none;flex-wrap:wrap;
+  display:none;justify-content:center;
   position:fixed;bottom:0;left:0;right:0;z-index:9997;
-  border-top:1px solid rgba(255,255,255,0.12);
+  background:linear-gradient(to top,rgba(5,7,12,0.75),rgba(5,7,12,0));
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));
 }
 .site-footer.active{display:flex}
-.footer-item{flex:1;min-width:120px;padding:13px 24px;display:flex;justify-content:space-between;
-  align-items:center;cursor:pointer;font-size:9px;letter-spacing:0.15em;transition:all 0.25s;
-  background:rgba(10,10,10,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  font-family:'Geist Mono',monospace;border:none;
-  color:rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.08)}
-.footer-item:hover{color:rgba(255,255,255,0.9);background:rgba(10,10,10,0.72)}
-.footer-item:last-child{border-right:none}
-.footer-item:hover .arr{transform:translateX(3px)}
+.footer-item{width:200px;flex:none;padding:16px 16px 18px;
+  background:none;border:none;border-right:1px solid rgba(255,255,255,0.08);
+  font-family:'EB Garamond',serif;font-size:16px;letter-spacing:0.12em;
+  cursor:pointer;transition:color 0.3s;text-align:center;
+  color:rgba(255,255,255,0.85);text-shadow:0 1px 3px rgba(0,0,0,0.5)}
+.footer-item:first-child{border-left:1px solid rgba(255,255,255,0.08)}
+.footer-item:hover{color:#fff}
+.footer-item .arr{display:none}
 
 /* ─── DECO: Rain（横断歩道×赤アクセント） ─── */
 .deco-rain{height:200px;background:#0a0a0a}
@@ -262,9 +264,9 @@ body.menu-open #site-header{border-bottom-color:transparent}
   .slide-indicators,.scroll-hint{display:none}
   .masonry{grid-template-columns:repeat(2,1fr)}
   .photo-cell.landscape{grid-column:span 2}
-  .site-footer{flex-direction:row}
-  .footer-item{flex:1;min-width:0;border-right:1px solid rgba(255,255,255,0.06);border-bottom:none;padding:13px 4px;font-size:10px;letter-spacing:0.08em;justify-content:center}
-  .footer-item .arr{display:none}
+  .footer-item{flex:1;min-width:0;width:auto;padding:15px 4px 17px;font-size:14px;letter-spacing:0.06em;white-space:nowrap}
+  .footer-item:first-child{border-left:none}
+  .footer-item:last-child{border-right:none}
   #about-page,#contact-page,#shop-page{padding:40px 20px}
   .cat-tabs{overflow:visible;justify-content:stretch}
   .cat-tab{flex:1;min-width:0;width:0;padding:15px 4px 17px;font-size:14px;letter-spacing:0.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -272,7 +274,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
 }
 @media(min-width:601px) and (max-width:900px){.masonry{grid-template-columns:repeat(3,1fr)}}
 /* ホーム画面から開いたとき（Safariのツールバーがない）はホームバーの分だけタブを上げる */
-@media (display-mode:standalone){.cat-buttons,.cat-tabs{padding-bottom:max(48px,calc(14px + env(safe-area-inset-bottom)))}}
+@media (display-mode:standalone){.cat-buttons,.cat-tabs,.site-footer{padding-bottom:max(48px,calc(14px + env(safe-area-inset-bottom)))}}
 </style>
 </head>
 <body style="--theme-accent: #d42020; --theme-accent-l: #e85050; --theme-accent-d: #8a1010; --theme-bg: #080c14; --theme-placeholder: #0e1420; --theme-ph-stroke: #3a4a62; --theme-border: rgba(255,255,255,0.06); --theme-muted: #3a4a62; --theme-text: #8aaac8; --theme-cap-grad: rgba(4,6,12,0.8); --theme-header-bg: rgba(8,12,20,0.85); --theme-header-border: rgba(255,255,255,0.06); --theme-logo-color: rgba(255,255,255,0.9); background: rgb(8, 12, 20); color: rgb(138, 170, 200);">
