@@ -76,9 +76,9 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-link:hover{opacity:0.75}
 .mobile-work-row{display:flex;align-items:baseline;white-space:nowrap;overflow-x:auto;scrollbar-width:none;padding-right:20px}
 .mobile-work-row::-webkit-scrollbar{display:none}
-.mobile-work-row .mobile-link{padding-right:26px;flex:none}
-.mobile-sublink{flex:none;padding:12px 5px;background:none;border:none;cursor:pointer;
-  font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.04em;color:var(--theme-muted,#3a4a62);opacity:0.75}
+.mobile-work-row .mobile-link{padding-right:18px;flex:none}
+.mobile-sublink{flex:none;padding:12px 9px;background:none;border:none;cursor:pointer;
+  font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0;color:var(--theme-muted,#3a4a62);opacity:0.75}
 .mobile-sublink:hover{opacity:1}
 /* Work を押すまでページ名は隠しておく */
 .mobile-work-row .mobile-sublink{visibility:hidden;opacity:0;transform:translateX(-6px);
@@ -100,8 +100,10 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .top-category{display:none}
 .top-title{font-family:'EB Garamond',serif;font-size:clamp(40px,6vw,74px);font-weight:400;line-height:1.0;
   color:rgba(255,255,255,0.95);font-style:italic;margin-bottom:8px;min-height:2.2em;overflow:visible;
-  cursor:pointer;transition:opacity 0.3s}
-.top-title:hover{opacity:0.75}
+  pointer-events:none}
+/* 押せるのは文字の部分だけ */
+.top-title-link{pointer-events:auto;cursor:pointer;transition:opacity 0.3s}
+.top-title-link:hover{opacity:0.75}
 .top-desc{font-size:11px;line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.06em;max-width:360px;height:3.8em;overflow:hidden}
 .slide-indicators{position:absolute;right:32px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:8px}
 .slide-dot{width:2px;height:20px;background-color:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border:none;padding:0}
@@ -2175,24 +2177,24 @@ function buildNav() {
   // Work の横に各カテゴリへ直接飛べるリンクを並べる
   mob.insertAdjacentHTML('beforeend',
     `<div class="mobile-work-row"><button class="mobile-link" data-nav="nav-work" onclick="this.parentElement.classList.toggle('expanded')">Work</button>` +
-    CATEGORIES.map(c => `<button class="mobile-sublink" data-cat="${c.id}" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`).join('') +
+    CATEGORIES.map(c => `<button class="mobile-sublink" data-cat="${c.id}" onclick="showPage('${c.id}');closeMenu()">${c.label}</button>`).join('') +
     `</div>`);
   // About
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" data-nav="nav-about" onclick="goSection('about');toggleMenu()">About</button>`);
+    `<button class="mobile-link" data-nav="nav-about" onclick="goSection('about');closeMenu()">About</button>`);
   // Shop → STORESへ外部リンク
   const STORES_URL = 'https://m2eu5aqavhzwivd5kax0.stores.jp';
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-shop" onclick="window.open('${STORES_URL}','_blank')">Shop</button>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" onclick="window.open('${STORES_URL}','_blank');toggleMenu()">Shop</button>`);
+    `<button class="mobile-link" onclick="window.open('${STORES_URL}','_blank');closeMenu()">Shop</button>`);
   // Contact
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-contact" onclick="goSection('contact')">Contact</button>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" data-nav="nav-contact" onclick="goSection('contact');toggleMenu()">Contact</button>`);
+    `<button class="mobile-link" data-nav="nav-contact" onclick="goSection('contact');closeMenu()">Contact</button>`);
 }
 
 function buildTopButtons() {
@@ -2359,13 +2361,14 @@ function updateTopText(catId) {
   const c = CATEGORIES.find(c => c.id === catId);
   if (!c) return;
   document.getElementById('top-category').textContent = c.label;
-  document.getElementById('top-title').innerHTML      = c.topTitle;
+  document.getElementById('top-title').innerHTML      = `<span class="top-title-link">${c.topTitle}</span>`;
   document.getElementById('top-title').dataset.cat    = catId;
   document.getElementById('top-desc').textContent     = c.topDesc;
 }
 
 // トップの大きいタイトルを押すと、そのカテゴリの Work ページへ
 document.getElementById('top-title').addEventListener('click', e => {
+  if (!e.target.closest('.top-title-link')) return;
   const catId = e.currentTarget.dataset.cat;
   if (catId) goPortfolio(catId);
 });
@@ -2384,6 +2387,7 @@ function updateTabs(catId) {
 }
 
 function backToTop() {
+  closeMenu();
   document.getElementById('portfolio').style.display = 'none';
   document.getElementById('top').style.display = 'block';
   applyTheme(document.querySelector('.slide.active')?.dataset.cat || CATEGORIES[0].id);
@@ -2406,6 +2410,7 @@ function goPortfolio(catId) {
 const scrollPos = {};
 
 function showPage(catId) {
+  closeMenu();
   if (curSection === 'top') {
     document.getElementById('top').style.display = 'none';
     document.getElementById('portfolio').style.display = 'block';
@@ -2456,6 +2461,7 @@ function showPage(catId) {
 }
 
 function goSection(sec) {
+  closeMenu();
   if (curSection === 'top') {
     document.getElementById('top').style.display = 'none';
     document.getElementById('portfolio').style.display = 'block';
@@ -2492,6 +2498,8 @@ function toggleMenu() {
   document.body.classList.toggle('menu-open', menuOpen);
   if (!menuOpen) document.querySelector('.mobile-work-row')?.classList.remove('expanded');
 }
+// ページを移動したときはメニューを閉じる（開いていなければ何もしない）
+function closeMenu() { if (menuOpen) toggleMenu(); }
 
 function getCropKey(src) {
   const filename = src.split('/').pop().split('?')[0].toUpperCase();
