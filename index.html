@@ -71,8 +71,12 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-link{padding:12px 32px;font-size:11px;letter-spacing:0.15em;cursor:pointer;background:none;border:none;
   font-family:'Geist Mono',monospace;text-align:left;color:var(--theme-muted,#3a4a62)}
 .mobile-link:hover{color:var(--theme-text,#8aaac8)}
-.mobile-sublink{padding:7px 32px 7px 48px;font-family:'EB Garamond',serif;font-size:15px;letter-spacing:0.06em}
-.mobile-sublink + .mobile-link:not(.mobile-sublink){margin-top:6px}
+.mobile-work-row{display:flex;align-items:baseline;white-space:nowrap;overflow-x:auto;scrollbar-width:none;padding-right:20px}
+.mobile-work-row::-webkit-scrollbar{display:none}
+.mobile-work-row .mobile-link{padding-right:14px;flex:none}
+.mobile-sublink{flex:none;padding:12px 6px;background:none;border:none;cursor:pointer;
+  font-family:'EB Garamond',serif;font-size:14px;letter-spacing:0.04em;color:var(--theme-muted,#3a4a62)}
+.mobile-sublink:hover{color:var(--theme-text,#8aaac8)}
 
 /* ─── TOP ─── */
 #top{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#080c14}
@@ -2168,11 +2172,11 @@ function buildNav() {
   const mob = document.getElementById('mobile-menu');
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-work" onclick="showPage('${CATEGORIES[0].id}')">Work</button>`);
+  // Work の横に各カテゴリへ直接飛べるリンクを並べる
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>`);
-  // Work の下に各カテゴリへ直接飛べるリンク
-  CATEGORIES.forEach(c => mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link mobile-sublink" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`));
+    `<div class="mobile-work-row"><button class="mobile-link" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>` +
+    CATEGORIES.map(c => `<button class="mobile-sublink" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`).join('') +
+    `</div>`);
   // About
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button>`);
