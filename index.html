@@ -38,6 +38,13 @@ body.on-top #site-header::before{transition:opacity 0.25s ease,background 1.2s e
 body.on-top #site-header{transition:border-color 1.2s ease}
 body.on-top .header-logo,body.on-top .header-nav-link{transition:color 1.2s ease,border-color 1.2s ease}
 body.on-top .hamburger span{transition:transform 0.3s,opacity 0.3s,background 1.2s ease}
+/* トップはヘッダーの背景を出さず、写真の上に文字だけを載せる */
+body.on-top:not(.menu-open) #site-header::before{opacity:0}
+body.on-top:not(.menu-open) #site-header{border-bottom-color:transparent}
+body.on-top:not(.menu-open) .header-logo{color:rgba(255,255,255,0.95)}
+body.on-top:not(.menu-open) .header-nav-link{color:rgba(255,255,255,0.8)}
+body.on-top:not(.menu-open) .header-nav-link:hover{color:#fff;border-bottom-color:#fff}
+body.on-top:not(.menu-open) .hamburger span{background:#fff}
 /* iOS Safari はぼかし付き要素のフェードが途中で飛ぶので、Work ページではぼかしを使わず、戻りは少しゆっくり */
 body.on-work #site-header::before{backdrop-filter:none;-webkit-backdrop-filter:none;transition:opacity 0.4s ease-out,background 0.4s}
 /* メニューを開いている間はヘッダーをメニューと同じ不透明の背景にそろえる */
@@ -67,12 +74,12 @@ body.menu-open #site-header{border-bottom-color:transparent}
 
 /* ─── TOP ─── */
 #top{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#080c14}
-.slide{position:absolute;inset:56px 0 0 0;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
 .slide.active{opacity:1;pointer-events:auto}
 .slide-img{width:100%;height:100%;object-fit:cover;display:block}
 .slide-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0e1420}
 .slide-placeholder svg{stroke:#3a4a62;fill:none;width:48px;height:48px;opacity:0.3}
-.slide-overlay{position:absolute;inset:56px 0 0 0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.3) 60%,rgba(0,0,0,0.75) 100%)}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.05) 18%,rgba(0,0,0,0.3) 60%,rgba(0,0,0,0.75) 100%)}
 .top-center{position:absolute;bottom:120px;left:90px;z-index:20;max-width:560px}
 .top-category{display:none}
 .top-title{font-family:'EB Garamond',serif;font-size:clamp(40px,6vw,74px);font-weight:400;line-height:1.0;
