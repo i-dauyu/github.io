@@ -6,6 +6,9 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Geist+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+/* スマホでタップしたときに出る四角い影・クリック時の枠を消す（キーボード操作時の枠は残す） */
+*{-webkit-tap-highlight-color:transparent}
+button:focus:not(:focus-visible),a:focus:not(:focus-visible){outline:none}
 html{scroll-behavior:smooth}
 :root{
   --red:#d42020;--red-l:#e85050;--red-d:#8a1010;
