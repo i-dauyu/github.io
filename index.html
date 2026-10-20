@@ -66,7 +66,9 @@ body.on-work #site-header::before{backdrop-filter:none;-webkit-backdrop-filter:n
 .top-center{position:absolute;bottom:120px;left:90px;z-index:20;max-width:560px}
 .top-category{display:none}
 .top-title{font-family:'EB Garamond',serif;font-size:clamp(40px,6vw,74px);font-weight:400;line-height:1.0;
-  color:rgba(255,255,255,0.95);font-style:italic;margin-bottom:8px;min-height:2.2em;overflow:visible}
+  color:rgba(255,255,255,0.95);font-style:italic;margin-bottom:8px;min-height:2.2em;overflow:visible;
+  cursor:pointer;transition:opacity 0.3s}
+.top-title:hover{opacity:0.75}
 .top-desc{font-size:11px;line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.06em;max-width:360px;height:3.8em;overflow:hidden}
 .slide-indicators{position:absolute;right:32px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:8px}
 .slide-dot{width:2px;height:20px;background:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border:none;padding:0}
@@ -2317,8 +2319,15 @@ function updateTopText(catId) {
   if (!c) return;
   document.getElementById('top-category').textContent = c.label;
   document.getElementById('top-title').innerHTML      = c.topTitle;
+  document.getElementById('top-title').dataset.cat    = catId;
   document.getElementById('top-desc').textContent     = c.topDesc;
 }
+
+// トップの大きいタイトルを押すと、そのカテゴリの Work ページへ
+document.getElementById('top-title').addEventListener('click', e => {
+  const catId = e.currentTarget.dataset.cat;
+  if (catId) goPortfolio(catId);
+});
 
 function setNavActive(id) {
   document.querySelectorAll('.header-nav-link').forEach(l => l.classList.remove('active'));
