@@ -71,6 +71,8 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-link{padding:12px 32px;font-size:11px;letter-spacing:0.15em;cursor:pointer;background:none;border:none;
   font-family:'Geist Mono',monospace;text-align:left;color:var(--theme-muted,#3a4a62)}
 .mobile-link:hover{color:var(--theme-text,#8aaac8)}
+.mobile-sublink{padding:7px 32px 7px 48px;font-family:'EB Garamond',serif;font-size:15px;letter-spacing:0.06em}
+.mobile-sublink + .mobile-link:not(.mobile-sublink){margin-top:6px}
 
 /* ─── TOP ─── */
 #top{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#080c14}
@@ -2168,6 +2170,9 @@ function buildNav() {
     `<button class="header-nav-link" id="nav-work" onclick="showPage('${CATEGORIES[0].id}')">Work</button>`);
   mob.insertAdjacentHTML('beforeend',
     `<button class="mobile-link" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>`);
+  // Work の下に各カテゴリへ直接飛べるリンク
+  CATEGORIES.forEach(c => mob.insertAdjacentHTML('beforeend',
+    `<button class="mobile-link mobile-sublink" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`));
   // About
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button>`);
