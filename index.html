@@ -22,13 +22,17 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 #site-header{
   position:fixed;top:0;left:0;right:0;z-index:9999;height:56px;
   display:flex;justify-content:space-between;align-items:center;padding:0 40px;
+  border-bottom:1px solid var(--theme-header-border,rgba(255,255,255,0.06));
+  transition:border-color 0.25s ease;
+}
+/* 背景とぼかしは疑似要素に載せて opacity だけでフェードさせる（消えるのも戻るのも同じ動き） */
+#site-header::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:var(--theme-header-bg,rgba(8,12,20,0.85));
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--theme-header-border,rgba(255,255,255,0.06));
-  transition:background 0.6s ease,border-color 0.6s ease,backdrop-filter 0.6s ease,-webkit-backdrop-filter 0.6s ease;
-}
+  transition:opacity 0.25s ease,background 0.4s}
 /* Work ページでスクロール中だけ背景を消してロゴとメニューだけ残す */
-body.on-work.scrolling #site-header{background:transparent;backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);border-bottom-color:transparent;transition-duration:0.25s}
+body.on-work.scrolling #site-header{border-bottom-color:transparent}
+body.on-work.scrolling #site-header::before{opacity:0}
 .header-logo{font-family:'EB Garamond',serif;font-size:20px;letter-spacing:0.2em;font-style:italic;
   cursor:pointer;background:none;border:none;color:var(--theme-logo-color,rgba(255,255,255,0.9));transition:color 0.3s}
 .header-nav{display:flex;gap:20px;align-items:center}
