@@ -27,10 +27,8 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   border-bottom:1px solid var(--theme-header-border,rgba(255,255,255,0.06));
   transition:background 0.4s,border-color 0.4s;
 }
-/* Work ページでは背景を消してロゴとメニューだけ残す */
-body.on-work #site-header{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom-color:transparent}
-body.on-work .header-logo,body.on-work .header-nav-link{text-shadow:0 1px 3px rgba(0,0,0,0.5)}
-body.on-work .hamburger{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.5))}
+/* Work ページでスクロール中だけ背景を消してロゴとメニューだけ残す */
+body.on-work.scrolling #site-header{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom-color:transparent}
 .header-logo{font-family:'EB Garamond',serif;font-size:20px;letter-spacing:0.2em;font-style:italic;
   cursor:pointer;background:none;border:none;color:var(--theme-logo-color,rgba(255,255,255,0.9));transition:color 0.3s}
 .header-nav{display:flex;gap:20px;align-items:center}
@@ -2412,6 +2410,15 @@ function goSection(sec) {
   document.querySelector('.site-footer').classList.add('active');
 }
 
+// Work ページ: スクロール中はヘッダーを透明にし、止まったら戻す
+let scrollIdleTimer;
+window.addEventListener('scroll', () => {
+  if (!document.body.classList.contains('on-work')) return;
+  document.body.classList.add('scrolling');
+  clearTimeout(scrollIdleTimer);
+  scrollIdleTimer = setTimeout(() => document.body.classList.remove('scrolling'), 250);
+}, {passive: true});
+
 function hideAll() {
   document.querySelectorAll('.cat-page').forEach(e => e.classList.remove('active'));
   ['about','contact','shop'].forEach(s => document.getElementById(s + '-page')?.classList.remove('active'));
@@ -3973,7 +3980,7 @@ function downloadUpdatedHTML() {
   topSection.style.display = 'block';
   portfolioSection.style.display = 'none';
   const wasOnWork = document.body.classList.contains('on-work');
-  document.body.classList.remove('on-work');
+  document.body.classList.remove('on-work', 'scrolling');
   if (!document.body.className) document.body.removeAttribute('class');
 
   let docHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
