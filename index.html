@@ -181,7 +181,7 @@ body.theme-light .cat-tabs{background:linear-gradient(to top,rgba(5,7,12,0.45),r
   background:linear-gradient(transparent,var(--theme-cap-grad,rgba(4,6,12,0.8)));
   opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;justify-content:space-between}
 .cap-title{font-size:10px;letter-spacing:0.12em;color:rgba(255,255,255,0.9)}
-.cap-tag{font-size:8px;padding:2px 7px;border:1px solid;
+.cap-tag{display:none;font-size:8px;padding:2px 7px;border:1px solid;
   color:var(--theme-accent-l,var(--theme-accent,#d42020));
   border-color:var(--theme-accent-d,var(--theme-accent,#8a1010))}
 
@@ -2775,6 +2775,7 @@ function lbApply(animate) {
   if (!img) return;
   img.style.transition = animate ? 'transform 0.25s ease' : 'none';
   img.style.transform = lbZoom.s === 1 ? '' : `translate(${lbZoom.x}px,${lbZoom.y}px) scale(${lbZoom.s})`;
+  document.getElementById('lightbox').classList.toggle('zoomed', lbZoom.s > 1);
 }
 function lbReset(animate) { lbZoom.s = 1; lbZoom.x = 0; lbZoom.y = 0; lbApply(animate); }
 function lbTap() {
@@ -2828,6 +2829,42 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.touches.length === 1 && lbZoom.s > 1) {
       start = { mode: 'pan', px: e.touches[0].clientX, py: e.touches[0].clientY, x: lbZoom.x, y: lbZoom.y };
     }
+  });
+
+  // PC: マウスホイール・トラックパッドのピンチで拡大縮小（カーソル位置を中心に）、拡大中はドラッグで移動
+  lb.addEventListener('wheel', e => {
+    const img = document.getElementById('lb-img');
+    if (!img || lb.style.display === 'none') return;
+    e.preventDefault();
+    const r = img.getBoundingClientRect();
+    const ox = r.left - lbZoom.x, oy = r.top - lbZoom.y;
+    const k = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.002));
+    const s = Math.min(4, Math.max(1, lbZoom.s * k));
+    const px = (e.clientX - ox - lbZoom.x) / lbZoom.s, py = (e.clientY - oy - lbZoom.y) / lbZoom.s;
+    lbZoom.s = s;
+    lbZoom.x = e.clientX - ox - px * s;
+    lbZoom.y = e.clientY - oy - py * s;
+    if (s < 1.02) { lbReset(false); return; }
+    lbApply(false);
+  }, { passive: false });
+  let drag = null;
+  lb.addEventListener('mousedown', e => {
+    if (lbZoom.s <= 1 || e.button !== 0) return;
+    e.preventDefault();
+    drag = { px: e.clientX, py: e.clientY, x: lbZoom.x, y: lbZoom.y };
+    lb.classList.add('dragging');
+  });
+  window.addEventListener('mousemove', e => {
+    if (!drag) return;
+    lbZoom.x = drag.x + e.clientX - drag.px;
+    lbZoom.y = drag.y + e.clientY - drag.py;
+    if (Math.abs(e.clientX - drag.px) + Math.abs(e.clientY - drag.py) > 3) lbZoom.moved = true;
+    lbApply(false);
+  });
+  window.addEventListener('mouseup', () => {
+    if (!drag) return;
+    drag = null;
+    lb.classList.remove('dragging');
   });
 });
 
@@ -4334,6 +4371,8 @@ window.adminToggleMini = adminToggleMini;
 }
 #lightbox,#lightbox *{cursor:zoom-out}
 #lightbox{touch-action:none}
+#lightbox.zoomed,#lightbox.zoomed *{cursor:grab}
+#lightbox.zoomed.dragging,#lightbox.zoomed.dragging *{cursor:grabbing}
 #lb-img{transform-origin:0 0;will-change:transform}
 #lightbox.open{background:rgba(0,0,0,0.92)}
 #lightbox-inner{
