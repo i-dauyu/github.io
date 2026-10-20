@@ -32,7 +32,9 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   transition:opacity 0.25s ease,background 0.4s}
 /* Work ページでスクロール中だけ背景を消してロゴとメニューだけ残す */
 body.on-work.scrolling #site-header{border-bottom-color:transparent}
-body.on-work.scrolling #site-header::before{opacity:0}
+body.on-work.scrolling #site-header::before{opacity:0;transition:opacity 0.25s ease,background 0.4s}
+/* iOS Safari はぼかし付き要素のフェードが途中で飛ぶので、Work ページではぼかしを使わず、戻りは少しゆっくり */
+body.on-work #site-header::before{backdrop-filter:none;-webkit-backdrop-filter:none;transition:opacity 0.4s ease-out,background 0.4s}
 .header-logo{font-family:'EB Garamond',serif;font-size:20px;letter-spacing:0.2em;font-style:italic;
   cursor:pointer;background:none;border:none;color:var(--theme-logo-color,rgba(255,255,255,0.9));transition:color 0.3s}
 .header-nav{display:flex;gap:20px;align-items:center}
