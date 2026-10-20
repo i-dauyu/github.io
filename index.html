@@ -86,6 +86,8 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-work-row.expanded .mobile-sublink{visibility:visible;opacity:0.75;transform:none;
   transition:opacity 0.25s ease,transform 0.25s ease,visibility 0s}
 .mobile-work-row.expanded .mobile-sublink.active,.mobile-work-row.expanded .mobile-sublink:hover{opacity:1}
+/* 閉じるときは選択中・ホバー中のものも含めて全部同じように消す */
+.mobile-work-row:not(.expanded) .mobile-sublink,.mobile-work-row:not(.expanded) .mobile-sublink.active,.mobile-work-row:not(.expanded) .mobile-sublink:hover{opacity:0}
 .mobile-link.active,.mobile-sublink.active{color:var(--theme-accent,#d42020);opacity:1}
 
 /* ─── TOP ─── */
