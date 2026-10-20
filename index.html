@@ -80,6 +80,12 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-sublink{flex:none;padding:12px 5px;background:none;border:none;cursor:pointer;
   font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.04em;color:var(--theme-muted,#3a4a62);opacity:0.75}
 .mobile-sublink:hover{opacity:1}
+/* Work を押すまでページ名は隠しておく */
+.mobile-work-row .mobile-sublink{visibility:hidden;opacity:0;transform:translateX(-6px);
+  transition:opacity 0.25s ease,transform 0.25s ease,visibility 0s linear 0.25s}
+.mobile-work-row.expanded .mobile-sublink{visibility:visible;opacity:0.75;transform:none;
+  transition:opacity 0.25s ease,transform 0.25s ease,visibility 0s}
+.mobile-work-row.expanded .mobile-sublink.active,.mobile-work-row.expanded .mobile-sublink:hover{opacity:1}
 .mobile-link.active,.mobile-sublink.active{color:var(--theme-accent,#d42020);opacity:1}
 
 /* ─── TOP ─── */
@@ -2168,7 +2174,7 @@ function buildNav() {
     `<button class="header-nav-link" id="nav-work" onclick="showPage('${CATEGORIES[0].id}')">Work</button>`);
   // Work の横に各カテゴリへ直接飛べるリンクを並べる
   mob.insertAdjacentHTML('beforeend',
-    `<div class="mobile-work-row"><button class="mobile-link" data-nav="nav-work" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>` +
+    `<div class="mobile-work-row"><button class="mobile-link" data-nav="nav-work" onclick="this.parentElement.classList.toggle('expanded')">Work</button>` +
     CATEGORIES.map(c => `<button class="mobile-sublink" data-cat="${c.id}" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`).join('') +
     `</div>`);
   // About
@@ -2484,6 +2490,7 @@ function toggleMenu() {
   document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
   document.getElementById('hamburger').classList.toggle('open', menuOpen);
   document.body.classList.toggle('menu-open', menuOpen);
+  if (!menuOpen) document.querySelector('.mobile-work-row')?.classList.remove('expanded');
 }
 
 function getCropKey(src) {
