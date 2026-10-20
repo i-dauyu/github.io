@@ -88,8 +88,8 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .top-title:hover{opacity:0.75}
 .top-desc{font-size:11px;line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.06em;max-width:360px;height:3.8em;overflow:hidden}
 .slide-indicators{position:absolute;right:32px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:8px}
-.slide-dot{width:2px;height:20px;background:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border:none;padding:0}
-.slide-dot.active{background:rgba(255,255,255,0.8);height:32px}
+.slide-dot{width:2px;height:20px;background-color:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border:none;padding:0}
+.slide-dot.active{background-color:rgba(255,255,255,0.8);height:32px}
 .scroll-hint{position:absolute;bottom:110px;right:40px;z-index:20;display:flex;flex-direction:column;
   align-items:center;gap:6px;opacity:0.4;animation:bounce 2s ease-in-out infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
@@ -277,7 +277,11 @@ body.theme-light .cat-tabs{background:linear-gradient(to top,rgba(5,7,12,0.45),r
   .cat-btn{flex:1;min-width:0;width:auto;font-size:14px;letter-spacing:0.06em;padding:15px 4px 17px;white-space:nowrap}
   .cat-btn:first-child,.cat-tab:first-child{border-left:none}
   .cat-btn:last-child,.cat-tab:last-child{border-right:none}
-  .slide-indicators,.scroll-hint{display:none}
+  .scroll-hint{display:none}
+  /* スマホでも写真を切り替えられる点線を右端に。指で押しやすいよう当たり判定を広げる */
+  .slide-indicators{right:6px;gap:4px}
+  .slide-dot{width:22px;height:14px;padding:0 10px;background-clip:content-box}
+  .slide-dot.active{height:24px}
   .masonry{grid-template-columns:repeat(2,1fr)}
   .photo-cell.landscape{grid-column:span 2}
   .footer-item{flex:1;min-width:0;width:auto;padding:15px 4px 17px;font-size:14px;letter-spacing:0.06em;white-space:nowrap}
