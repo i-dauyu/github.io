@@ -100,11 +100,6 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .slide-indicators{position:absolute;right:32px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:8px}
 .slide-dot{width:2px;height:20px;background-color:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border:none;padding:0}
 .slide-dot.active{background-color:rgba(255,255,255,0.8);height:32px}
-.scroll-hint{position:absolute;bottom:110px;right:40px;z-index:20;display:flex;flex-direction:column;
-  align-items:center;gap:6px;opacity:0.4;animation:bounce 2s ease-in-out infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-.scroll-hint span{font-size:8px;letter-spacing:0.2em;color:#fff;writing-mode:vertical-rl}
-.scroll-hint svg{stroke:#fff;fill:none;width:14px;height:14px}
 
 /* top ボタン群 */
 .cat-buttons{display:flex;justify-content:center;gap:0;position:absolute;bottom:0;left:0;right:0;z-index:20;
@@ -287,7 +282,6 @@ body.theme-light .cat-tabs{background:linear-gradient(to top,rgba(5,7,12,0.45),r
   .cat-btn{flex:1;min-width:0;width:auto;font-size:14px;letter-spacing:0.06em;padding:15px 4px 17px;white-space:nowrap}
   .cat-btn:first-child,.cat-tab:first-child{border-left:none}
   .cat-btn:last-child,.cat-tab:last-child{border-right:none}
-  .scroll-hint{display:none}
   /* スマホでも写真を切り替えられる点線を右端に。指で押しやすいよう当たり判定を広げる */
   .slide-indicators{right:6px;gap:4px}
   .slide-dot{width:22px;height:14px;padding:0 10px;background-clip:content-box}
@@ -342,10 +336,6 @@ body.theme-light .cat-tabs{background:linear-gradient(to top,rgba(5,7,12,0.45),r
   </div>
   <div class="cat-buttons" id="top-cat-buttons"></div>
   <div class="slide-indicators" id="slide-indicators"></div>
-  <div class="scroll-hint">
-    <span>scroll</span>
-    <svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
-  </div>
 </section>
 
 <section id="portfolio" style="display: none;">
