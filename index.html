@@ -74,7 +74,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-link{padding:12px 32px;font-size:12px;letter-spacing:0.15em;cursor:pointer;background:none;border:none;
   font-family:'Geist Mono',monospace;text-align:left;color:var(--theme-text,#8aaac8)}
 .mobile-link:hover{opacity:0.75}
-.mobile-work-row{display:flex;align-items:baseline;white-space:nowrap;overflow-x:auto;scrollbar-width:none;padding-right:20px}
+.mobile-work-row{cursor:pointer;display:flex;align-items:baseline;white-space:nowrap;overflow-x:auto;scrollbar-width:none;padding-right:20px}
 .mobile-work-row::-webkit-scrollbar{display:none}
 .mobile-work-row .mobile-link{padding-right:18px;flex:none}
 .mobile-sublink{flex:none;padding:12px 9px;background:none;border:none;cursor:pointer;
@@ -2178,7 +2178,7 @@ function buildNav() {
     `<button class="header-nav-link" id="nav-work" onclick="showPage('${CATEGORIES[0].id}')">Work</button>`);
   // Work の横に各カテゴリへ直接飛べるリンクを並べる
   mob.insertAdjacentHTML('beforeend',
-    `<div class="mobile-work-row"><button class="mobile-link" data-nav="nav-work" onclick="this.parentElement.classList.toggle('expanded')">Work</button>` +
+    `<div class="mobile-work-row" onclick="if(!event.target.closest('.mobile-sublink'))this.classList.toggle('expanded')"><button class="mobile-link" data-nav="nav-work">Work</button>` +
     CATEGORIES.map(c => `<button class="mobile-sublink" data-cat="${c.id}" onclick="showPage('${c.id}');closeMenu()">${c.label}</button>`).join('') +
     `</div>`);
   // About
