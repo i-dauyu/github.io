@@ -70,18 +70,19 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 .scroll-hint svg{stroke:#fff;fill:none;width:14px;height:14px}
 
 /* top ボタン群 */
-.cat-buttons{display:flex;gap:1px;position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:20}
-.cat-btn{width:220px;flex:none;padding:12px 20px;
-  background:rgba(10,10,10,0.75);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border:none;border-top:1px solid rgba(255,255,255,0.12);
-  cursor:pointer;font-family:'EB Garamond',serif;
-  font-size:15px;letter-spacing:0.15em;color:rgba(255,255,255,0.5);transition:all 0.25s;
-  position:relative;overflow:hidden;text-align:center}
-.cat-btn::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  transform:scaleX(0);transition:transform 0.3s;background:var(--btn-accent,#fff)}
-.cat-btn:hover,.cat-btn.current{background:rgba(10,10,10,0.88);color:rgba(255,255,255,0.9)}
-.cat-btn:hover::before,.cat-btn.current::before{transform:scaleX(1)}
+.cat-buttons{display:flex;justify-content:center;gap:0;position:absolute;bottom:0;left:0;right:0;z-index:20;
+  background:linear-gradient(to top,rgba(5,7,12,0.7),rgba(5,7,12,0));
+  padding-bottom:env(safe-area-inset-bottom)}
+.cat-btn{width:180px;flex:none;padding:22px 16px 26px;
+  background:none;border:none;
+  cursor:pointer;font-family:'EB Garamond',serif;font-style:italic;
+  font-size:15px;letter-spacing:0.08em;color:rgba(255,255,255,0.4);transition:color 0.3s;
+  position:relative;text-align:center}
+.cat-btn::before{content:'';position:absolute;bottom:14px;left:50%;width:16px;height:1px;margin-left:-8px;
+  transform:scaleX(0);transition:transform 0.35s ease;background:var(--btn-accent,#fff)}
+.cat-btn:hover{color:rgba(255,255,255,0.75)}
+.cat-btn.current{color:rgba(255,255,255,0.95)}
+.cat-btn.current::before{transform:scaleX(1)}
 .cat-btn-label{display:block}
 
 /* ─── PORTFOLIO ─── */
@@ -91,20 +92,22 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 @keyframes fu{from{opacity:0}to{opacity:1}}
 
 /* tabs — 画面最下部に固定・トップボタンと完全統一 */
-.cat-tabs{display:flex;justify-content:center;gap:1px;
+.cat-tabs{display:flex;justify-content:center;gap:0;
   position:fixed;bottom:0;left:0;right:0;z-index:9998;
-  background:transparent;border:none;transition:none}
-.cat-tab{width:220px;flex:none;padding:12px 20px;
-  background:rgba(10,10,10,0.55);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:none;border-top:1px solid rgba(255,255,255,0.12);
-  font-family:'EB Garamond',serif;font-size:15px;letter-spacing:0.15em;
-  cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;text-align:center;
-  color:rgba(255,255,255,0.6)}
-.cat-tab:hover,.cat-tab.active{background:rgba(10,10,10,0.72);color:rgba(255,255,255,0.95)}
-.cat-tab::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  transform:scaleX(0);transition:transform 0.3s;background:var(--theme-accent,#d42020)}
-.cat-tab:hover::before,.cat-tab.active::before{transform:scaleX(1)}
+  background:rgba(8,12,20,0.62);
+  backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);
+  border-top:1px solid rgba(255,255,255,0.07);
+  padding-bottom:env(safe-area-inset-bottom);transition:none}
+.cat-tab{width:180px;flex:none;padding:16px 16px 20px;
+  background:none;border:none;
+  font-family:'EB Garamond',serif;font-style:italic;font-size:15px;letter-spacing:0.08em;
+  cursor:pointer;transition:color 0.3s;position:relative;text-align:center;
+  color:rgba(255,255,255,0.4)}
+.cat-tab:hover{color:rgba(255,255,255,0.75)}
+.cat-tab.active{color:rgba(255,255,255,0.95)}
+.cat-tab::before{content:'';position:absolute;bottom:10px;left:50%;width:16px;height:1px;margin-left:-8px;
+  transform:scaleX(0);transition:transform 0.35s ease;background:var(--theme-accent,#d42020)}
+.cat-tab.active::before{transform:scaleX(1)}
 
 /* section */
 .section-header{display:flex;justify-content:space-between;align-items:center;padding:18px 32px 12px;
@@ -239,8 +242,9 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   .hamburger{display:flex}
   .top-center{bottom:140px;left:20px;right:20px}
   .top-title{font-size:32px}
-  .cat-buttons{flex-direction:row;left:0;right:0;transform:none;width:100%}
-  .cat-btn{flex:1;width:auto;font-size:12px;padding:10px 8px;}
+  .cat-buttons{flex-direction:row;width:100%}
+  .cat-btn{flex:1;min-width:0;width:auto;font-size:13px;letter-spacing:0.04em;padding:20px 4px 24px;white-space:nowrap}
+  .cat-btn::before{bottom:13px}
   .slide-indicators,.scroll-hint{display:none}
   .masonry{grid-template-columns:repeat(2,1fr)}
   .photo-cell.landscape{grid-column:span 2}
@@ -249,7 +253,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
   .footer-item .arr{display:none}
   #about-page,#contact-page,#shop-page{padding:40px 20px}
   .cat-tabs{overflow:visible;justify-content:stretch}
-  .cat-tab{flex:1;min-width:0;width:0;padding:10px 8px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cat-tab{flex:1;min-width:0;width:0;padding:14px 4px 20px;font-size:13px;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .cat-btn-label{overflow:hidden;text-overflow:ellipsis}
 }
 @media(min-width:601px) and (max-width:900px){.masonry{grid-template-columns:repeat(3,1fr)}}
