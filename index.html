@@ -123,6 +123,12 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .cat-tab::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   transform:scaleX(0);transition:transform 0.35s ease;background:var(--theme-accent,#d42020)}
 .cat-tab.active::before{transform:scaleX(1);height:1.5px}
+/* 明るいテーマでは黒い影をやめ、背景色でうっすらぼかして文字を濃い色に */
+body.theme-light .cat-tabs{background:linear-gradient(to top,color-mix(in srgb,var(--theme-bg) 85%,transparent),transparent)}
+body.theme-light .cat-tab{color:color-mix(in srgb,var(--theme-text) 75%,transparent);text-shadow:0 0 6px color-mix(in srgb,var(--theme-bg) 70%,transparent);
+  border-right-color:color-mix(in srgb,var(--theme-text) 12%,transparent)}
+body.theme-light .cat-tab:first-child{border-left-color:color-mix(in srgb,var(--theme-text) 12%,transparent)}
+body.theme-light .cat-tab:hover,body.theme-light .cat-tab.active{color:var(--theme-text)}
 
 /* section */
 .section-header{display:flex;justify-content:space-between;align-items:center;padding:18px 32px 12px;
@@ -2124,6 +2130,10 @@ function applyTheme(catId) {
   s.setProperty('--theme-logo-color',    t.logoColor || 'rgba(255,255,255,0.9)');
   document.body.style.background = t.bg;
   document.body.style.color      = t.text;
+  // 背景が明るいテーマかどうか（下タブの影と文字色を切り替える）
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(t.bg || '');
+  const lum = m ? (0.299 * parseInt(m[1], 16) + 0.587 * parseInt(m[2], 16) + 0.114 * parseInt(m[3], 16)) / 255 : 0;
+  document.body.classList.toggle('theme-light', lum > 0.6);
 }
 
 // HTML構築
