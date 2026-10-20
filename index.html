@@ -2903,7 +2903,6 @@ document.addEventListener('click', e => {
 // ════════════════════════════════════════════════════
 //  管理画面
 //  開き方: Shift + A + D + M を同時押し
-//  または URL末尾に #admin をつけてリロード
 // ════════════════════════════════════════════════════
 (function() {
 
@@ -4078,7 +4077,6 @@ document.addEventListener('keydown', e => {
   }
 });
 document.addEventListener('keyup', e => adminKeys.delete(e.key.toLowerCase()));
-if (location.hash === '#admin') adminOpen();
 
 // カラーユーティリティ
 function toHex(color) {
