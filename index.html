@@ -33,6 +33,11 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 /* Work ページでスクロール中だけ背景を消してロゴとメニューだけ残す */
 body.on-work.scrolling #site-header{border-bottom-color:transparent}
 body.on-work.scrolling #site-header::before{opacity:0;transition:opacity 0.25s ease,background 0.4s}
+/* トップでは写真の切り替え（1.2s）と同じ動きでヘッダーの色も切り替える */
+body.on-top #site-header::before{transition:opacity 0.25s ease,background 1.2s ease}
+body.on-top #site-header{transition:border-color 1.2s ease}
+body.on-top .header-logo,body.on-top .header-nav-link{transition:color 1.2s ease,border-color 1.2s ease}
+body.on-top .hamburger span{transition:transform 0.3s,opacity 0.3s,background 1.2s ease}
 /* iOS Safari はぼかし付き要素のフェードが途中で飛ぶので、Work ページではぼかしを使わず、戻りは少しゆっくり */
 body.on-work #site-header::before{backdrop-filter:none;-webkit-backdrop-filter:none;transition:opacity 0.4s ease-out,background 0.4s}
 /* メニューを開いている間はヘッダーをメニューと同じ不透明の背景にそろえる */
@@ -2325,6 +2330,7 @@ function goToSlide(i) {
     v.play().catch(() => {});
   }
   updateTopText(els[i].dataset.cat);
+  if (curSection === 'top') applyTheme(els[i].dataset.cat);
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('current'));
   document.getElementById('topbtn-' + els[i].dataset.cat)?.classList.add('current');
 }
@@ -2357,11 +2363,12 @@ function updateTabs(catId) {
 function backToTop() {
   document.getElementById('portfolio').style.display = 'none';
   document.getElementById('top').style.display = 'block';
-  applyTheme(CATEGORIES[0].id);
+  applyTheme(document.querySelector('.slide.active')?.dataset.cat || CATEGORIES[0].id);
   window.scrollTo(0, 0);
   curSection = 'top';
   setNavActive(null);
   document.body.classList.remove('on-work');
+  document.body.classList.add('on-top');
   document.getElementById('cat-tabs').style.display = 'none';
   document.querySelector('.site-footer').classList.remove('active');
 }
@@ -2389,6 +2396,7 @@ function showPage(catId) {
   curSection = catId;
   applyTheme(catId);
   setNavActive('nav-work');
+  document.body.classList.remove('on-top');
   document.body.classList.add('on-work');
   updateTabs(catId);
   const loader = document.getElementById('page-loading');
@@ -2434,7 +2442,7 @@ function goSection(sec) {
   applyTheme(CATEGORIES[0].id);
   document.getElementById(sec + '-page')?.classList.add('active');
   setNavActive('nav-' + sec);
-  document.body.classList.remove('on-work');
+  document.body.classList.remove('on-work', 'on-top');
   curSection = sec;
   document.getElementById('cat-tabs').style.display = 'none';
   document.querySelector('.site-footer').classList.add('active');
@@ -2899,6 +2907,7 @@ window.cropApply = function() {
 };
 
 build();
+document.body.classList.add('on-top');
 
 // 保存済みフォントを読み込む
 (function loadSavedFont() {
