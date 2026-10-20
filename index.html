@@ -2732,6 +2732,7 @@ function lightboxOpen(photo) {
   const lb = document.getElementById('lightbox');
   // 読み込みが終わるまで写真とタイトルを隠してローディングを出す
   lb.classList.add('loading');
+  lbReset(false);
   const loaded = () => lb.classList.remove('loading');
   // 既存のvideo/imgを削除して差し替え
   const oldMedia = inner.querySelector('img, video');
@@ -2767,7 +2768,71 @@ function lightboxOpen(photo) {
   document.body.style.overflow = 'hidden';
 }
 
+// ─── 拡大表示の指ズーム（2本指で拡大縮小・拡大中は1本指で移動・拡大中のタップで元に戻す） ───
+const lbZoom = { s: 1, x: 0, y: 0, moved: false };
+function lbApply(animate) {
+  const img = document.getElementById('lb-img');
+  if (!img) return;
+  img.style.transition = animate ? 'transform 0.25s ease' : 'none';
+  img.style.transform = lbZoom.s === 1 ? '' : `translate(${lbZoom.x}px,${lbZoom.y}px) scale(${lbZoom.s})`;
+}
+function lbReset(animate) { lbZoom.s = 1; lbZoom.x = 0; lbZoom.y = 0; lbApply(animate); }
+function lbTap() {
+  if (lbZoom.moved) { lbZoom.moved = false; return; }
+  if (lbZoom.s > 1) { lbReset(true); return; }
+  lightboxClose();
+}
+// 拡大表示の要素はスクリプトより後ろにあるので、読み込み後に登録する
+document.addEventListener('DOMContentLoaded', () => {
+  const lb = document.getElementById('lightbox');
+  let start = null;
+  const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  const mid = t => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 });
+  lb.addEventListener('touchstart', e => {
+    const img = document.getElementById('lb-img');
+    if (!img) return;
+    const r = img.getBoundingClientRect();
+    // 拡大前の画像の左上（transform を外した位置）
+    const ox = r.left - lbZoom.x, oy = r.top - lbZoom.y;
+    if (e.touches.length === 2) {
+      const m = mid(e.touches);
+      start = { mode: 'pinch', d: dist(e.touches), s: lbZoom.s, x: lbZoom.x, y: lbZoom.y, m, ox, oy };
+    } else if (e.touches.length === 1 && lbZoom.s > 1) {
+      start = { mode: 'pan', px: e.touches[0].clientX, py: e.touches[0].clientY, x: lbZoom.x, y: lbZoom.y };
+    } else start = null;
+  }, { passive: true });
+  lb.addEventListener('touchmove', e => {
+    if (!start) return;
+    e.preventDefault();
+    if (start.mode === 'pinch' && e.touches.length === 2) {
+      const s = Math.min(4, Math.max(1, start.s * dist(e.touches) / start.d));
+      const m = mid(e.touches);
+      // 指の中心にある点が指の下に留まるように移動量を計算
+      const px = (start.m.x - start.ox - start.x) / start.s, py = (start.m.y - start.oy - start.y) / start.s;
+      lbZoom.s = s;
+      lbZoom.x = m.x - start.ox - px * s;
+      lbZoom.y = m.y - start.oy - py * s;
+    } else if (start.mode === 'pan' && e.touches.length === 1) {
+      lbZoom.x = start.x + e.touches[0].clientX - start.px;
+      lbZoom.y = start.y + e.touches[0].clientY - start.py;
+    }
+    lbZoom.moved = true;
+    lbApply(false);
+  }, { passive: false });
+  lb.addEventListener('touchend', e => {
+    if (e.touches.length === 0) {
+      start = null;
+      if (lbZoom.s < 1.05) lbReset(true);
+      // タップ扱いにならないよう、少し後で「動かした」印を消す
+      if (lbZoom.moved) setTimeout(() => { lbZoom.moved = false; }, 350);
+    } else if (e.touches.length === 1 && lbZoom.s > 1) {
+      start = { mode: 'pan', px: e.touches[0].clientX, py: e.touches[0].clientY, x: lbZoom.x, y: lbZoom.y };
+    }
+  });
+});
+
 function lightboxClose() {
+  lbReset(false);
   const lb = document.getElementById('lightbox');
   lb.classList.remove('open');
   // 動画を停止
@@ -4268,6 +4333,8 @@ window.adminToggleMini = adminToggleMini;
   transition:background 0.3s;cursor:default;
 }
 #lightbox,#lightbox *{cursor:zoom-out}
+#lightbox{touch-action:none}
+#lb-img{transform-origin:0 0;will-change:transform}
 #lightbox.open{background:rgba(0,0,0,0.92)}
 #lightbox-inner{
   position:relative;max-width:90vw;max-height:90vh;
@@ -4328,7 +4395,7 @@ window.adminToggleMini = adminToggleMini;
   </div>
 </div>
 
-<div id="lightbox" onclick="lightboxClose()" class="" style="display: none;">
+<div id="lightbox" onclick="lbTap()" class="" style="display: none;">
   <div id="lightbox-inner">
     <img id="lb-img" alt="">
     <div id="lb-meta">
