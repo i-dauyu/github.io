@@ -4274,6 +4274,8 @@ window.adminToggleMini = adminToggleMini;
   opacity:0;transform:scale(0.98);transition:opacity 0.6s ease,transform 0.6s ease;
 }
 #lightbox.open #lightbox-inner{opacity:1;transform:scale(1)}
+/* 閉じるときは背景と同じ0.3秒で写真も一緒に消す */
+#lightbox:not(.open) #lightbox-inner{transition-duration:0.3s}
 /* 読み込み中は写真もタイトルも出さず、細い線のローディングだけ見せる */
 #lightbox.open.loading #lightbox-inner{opacity:0;transform:scale(0.98)}
 #lb-loader{position:absolute;left:50%;top:50%;width:82px;height:1px;margin-left:-41px;overflow:hidden;
