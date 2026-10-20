@@ -72,13 +72,12 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 /* top ボタン群 */
 .cat-buttons{display:flex;justify-content:center;gap:0;position:absolute;bottom:0;left:0;right:0;z-index:20;
   background:linear-gradient(to top,rgba(5,7,12,0.75),rgba(5,7,12,0));
-  border-top:1px solid rgba(255,255,255,0.08);
-  padding-bottom:env(safe-area-inset-bottom)}
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))}
 .cat-btn{width:200px;flex:none;padding:16px 16px 18px;
   background:none;border:none;border-right:1px solid rgba(255,255,255,0.08);
   cursor:pointer;font-family:'EB Garamond',serif;
   font-size:15px;letter-spacing:0.12em;color:rgba(255,255,255,0.45);transition:color 0.3s;
-  position:relative;text-align:center}
+  position:relative;text-align:center;text-shadow:0 1px 10px rgba(0,0,0,0.85)}
 .cat-btn:first-child{border-left:1px solid rgba(255,255,255,0.08)}
 .cat-btn::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   transform:scaleX(0);transition:transform 0.35s ease;background:var(--btn-accent,#fff)}
@@ -97,7 +96,7 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 .cat-tabs{display:flex;justify-content:center;gap:0;
   position:fixed;bottom:0;left:0;right:0;z-index:9998;
   background:linear-gradient(to top,rgba(5,7,12,0.75),rgba(5,7,12,0));
-  padding-bottom:env(safe-area-inset-bottom);transition:none}
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));transition:none}
 .cat-tab{width:200px;flex:none;padding:16px 16px 18px;
   background:none;border:none;border-right:1px solid rgba(255,255,255,0.08);
   font-family:'EB Garamond',serif;font-size:15px;letter-spacing:0.12em;
