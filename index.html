@@ -77,6 +77,7 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-sublink{flex:none;padding:12px 6px;background:none;border:none;cursor:pointer;
   font-family:'EB Garamond',serif;font-size:12px;letter-spacing:0.04em;color:var(--theme-muted,#3a4a62);opacity:0.75}
 .mobile-sublink:hover{opacity:1}
+.mobile-link.active,.mobile-sublink.active{color:var(--theme-accent,#d42020);opacity:1}
 
 /* ─── TOP ─── */
 #top{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#080c14}
@@ -2174,14 +2175,14 @@ function buildNav() {
     `<button class="header-nav-link" id="nav-work" onclick="showPage('${CATEGORIES[0].id}')">Work</button>`);
   // Work の横に各カテゴリへ直接飛べるリンクを並べる
   mob.insertAdjacentHTML('beforeend',
-    `<div class="mobile-work-row"><button class="mobile-link" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>` +
-    CATEGORIES.map(c => `<button class="mobile-sublink" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`).join('') +
+    `<div class="mobile-work-row"><button class="mobile-link" data-nav="nav-work" onclick="showPage('${CATEGORIES[0].id}');toggleMenu()">Work</button>` +
+    CATEGORIES.map(c => `<button class="mobile-sublink" data-cat="${c.id}" onclick="showPage('${c.id}');toggleMenu()">${c.label}</button>`).join('') +
     `</div>`);
   // About
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" onclick="goSection('about');toggleMenu()">About</button>`);
+    `<button class="mobile-link" data-nav="nav-about" onclick="goSection('about');toggleMenu()">About</button>`);
   // Shop → STORESへ外部リンク
   const STORES_URL = 'https://m2eu5aqavhzwivd5kax0.stores.jp';
   nav.insertAdjacentHTML('beforeend',
@@ -2192,7 +2193,7 @@ function buildNav() {
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-contact" onclick="goSection('contact')">Contact</button>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" onclick="goSection('contact');toggleMenu()">Contact</button>`);
+    `<button class="mobile-link" data-nav="nav-contact" onclick="goSection('contact');toggleMenu()">Contact</button>`);
 }
 
 function buildTopButtons() {
@@ -2373,6 +2374,9 @@ document.getElementById('top-title').addEventListener('click', e => {
 function setNavActive(id) {
   document.querySelectorAll('.header-nav-link').forEach(l => l.classList.remove('active'));
   if (id) document.getElementById(id)?.classList.add('active');
+  // スマホのメニューにも今のページを色で示す
+  document.querySelectorAll('.mobile-link[data-nav]').forEach(l => l.classList.toggle('active', l.dataset.nav === id));
+  document.querySelectorAll('.mobile-sublink').forEach(l => l.classList.toggle('active', id === 'nav-work' && l.dataset.cat === curSection));
 }
 
 function updateTabs(catId) {
