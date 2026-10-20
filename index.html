@@ -110,7 +110,6 @@ body{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;ove
 .section-header{display:flex;justify-content:space-between;align-items:center;padding:18px 32px 12px;
   border-bottom:1px solid var(--theme-border,rgba(255,255,255,0.06))}
 .section-title{font-family:'EB Garamond',serif;font-size:20px;color:var(--theme-accent,#d42020)}
-.section-count{font-size:9px;letter-spacing:0.15em;color:var(--gray)}
 
 /* masonry → CSS Grid */
 .masonry{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:2px;grid-auto-flow:dense}
@@ -2177,7 +2176,6 @@ function buildPages() {
         ${deco}
         <div class="section-header">
           <div class="section-title">${c.label}</div>
-          <div class="section-count" id="count-${c.id}">0 photos</div>
         </div>
         <div class="masonry" id="masonry-${c.id}"></div>
         <div class="load-more-wrap" id="loadmore-${c.id}" style="display:none">
@@ -2615,13 +2613,11 @@ function renderPhotos(catId, reset) {
   const photos  = cat.photos;
   const masonry = document.getElementById('masonry-' + catId);
   const lmw     = document.getElementById('loadmore-' + catId);
-  const cnt     = document.getElementById('count-' + catId);
   if (reset) { masonry.innerHTML = ''; pState[catId] = 0; }
   const start = pState[catId];
   const end   = Math.min(start + BATCH, photos.length);
   for (let i = start; i < end; i++) masonry.appendChild(createCell(photos[i], i));
   pState[catId] = end;
-  cnt.textContent = photos.length + ' photos';
   lmw.style.display = end < photos.length ? 'flex' : 'none';
 }
 
