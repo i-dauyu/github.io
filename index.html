@@ -3107,7 +3107,6 @@ function adminSwitchTab(tab) {
   adminCurrentTab = tab;
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('admin-tab-' + tab).classList.add('active');
-  document.getElementById('admin-export-area').style.display = tab === 'works' ? 'block' : 'none';
   adminRender();
 }
 window.adminSwitchTab = adminSwitchTab;
@@ -4183,8 +4182,6 @@ window.adminExport = function() {
     ));
   });
   try { localStorage.setItem('idauyu_photos', JSON.stringify(out)); } catch(e) {}
-  const ta = document.getElementById('admin-export-text');
-  ta.value = JSON.stringify(out, null, 2);
   const newHTML = buildUpdatedHTML();
   curSection = _cur; adminApplyLive(); window.scrollTo(0, _y);
   // GitHub に直接公開する設定があれば公開、なければHTMLファイルとしてダウンロード
@@ -4194,12 +4191,6 @@ window.adminExport = function() {
     downloadUpdatedHTML(newHTML);
     showAdminToast('Saved & Downloading!');
   }
-};
-
-window.adminCopyExport = function() {
-  const ta = document.getElementById('admin-export-text');
-  if (!ta.value) adminExport();
-  navigator.clipboard && navigator.clipboard.writeText(ta.value).then(() => showAdminToast('Copied!'));
 };
 
 function buildUpdatedHTML() {
@@ -4526,13 +4517,24 @@ async function ghPublish(html) {
   showAdminToast('公開中…', 60000);
   try {
     const token = await ghReadToken(res.pass);
-    // 開いたあとに GitHub 側が更新されていたら、上書きして消さないよう止める
     const commits = await ghApi(token, '/commits?path=' + GH.path + '&sha=' + GH.branch + '&per_page=1');
     const latest = commits[0] && Date.parse(commits[0].commit.committer.date);
-    if (latest && latest > ghBaseTime) {
-      throw new Error('このページを開いたあとに GitHub 側が更新されています。ページを再読み込みしてから、もう一度保存してください');
-    }
     const cur = await ghApi(token, '/contents/' + GH.path + '?ref=' + GH.branch);
+    // 開いたあとに GitHub 側が更新されていたら（コードの更新など）、それを消さないよう
+    // GitHub の最新版に、写真とカテゴリーの設定（CATEGORIES）だけを重ねて公開する
+    if (latest && latest > ghBaseTime) {
+      const remote = new TextDecoder().decode(ghUnB64(cur.content.replace(/\s/g, '')));
+      const catsRe = /const CATEGORIES = \[[\s\S]*?\n\];/;
+      if (!catsRe.test(remote)) throw new Error('GitHub 側のファイルに写真の設定が見つからないため、公開を止めました');
+      const go = await ghDialog({
+        title: 'GitHub 側に新しい更新があります',
+        text: 'このページを開いたあとに、サイトのファイルが更新されています。\n\n最新のファイルを残したまま、写真の並び・カテゴリーの設定だけを重ねて公開します。（Pages タブの変更とフォント設定は、今回は反映されません）',
+        ok: '重ねて公開する',
+      });
+      if (!go) return showAdminToast('公開をやめました');
+      showAdminToast('公開中…', 60000);
+      html = remote.replace(catsRe, () => m[0]);
+    }
     const bytes = new TextEncoder().encode(html);
     if (bytes.length < cur.size * 0.7) {
       throw new Error('書き出したHTMLが今のサイトより極端に小さいため、公開を止めました');
@@ -4607,13 +4609,9 @@ window.adminClose = adminClose;
 function adminToggleMini() {
   const overlay = document.getElementById('admin-overlay');
   const btn = document.getElementById('admin-mini-btn');
-  const exportArea = document.getElementById('admin-export-area');
   const isMini = overlay.classList.toggle('mini');
   btn.textContent = isMini ? '全画面に戻る ↓' : 'サイトを見ながら編集 ↑';
   document.getElementById('site-header').style.marginTop = isMini ? '48px' : '';
-  // miniのときはインラインstyleを消してCSSのdisplay:noneに任せる
-  // 全画面のときはタブに応じて制御
-  exportArea.style.display = isMini ? '' : (adminCurrentTab === 'works' ? 'block' : 'none');
 }
 window.adminToggleMini = adminToggleMini;
 
@@ -4624,7 +4622,7 @@ window.adminToggleMini = adminToggleMini;
 <style>
 #admin-overlay{display:none;position:fixed;inset:0;z-index:99999;background:#0d0d0d;color:#ccc;font-family:'Geist Mono',monospace;font-size:11px;overflow-y:auto;transition:none}
 #admin-overlay.mini{inset:auto;top:0;left:0;right:0;bottom:auto;background:rgba(13,13,13,0.95);backdrop-filter:blur(8px);overflow:hidden}
-#admin-overlay.mini .admin-tab-bar,#admin-overlay.mini #admin-body,#admin-overlay.mini #admin-export-area{display:none}
+#admin-overlay.mini .admin-tab-bar,#admin-overlay.mini #admin-body{display:none}
 #admin-bar{position:sticky;top:0;z-index:10;background:#0d0d0d;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 28px;display:flex;align-items:center;gap:16px}
 #admin-overlay.mini #admin-bar{background:transparent;border-bottom:1px solid rgba(255,255,255,0.1)}
 #admin-bar-title{font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#fff;margin-right:auto;padding:14px 0}
@@ -4658,10 +4656,6 @@ window.adminToggleMini = adminToggleMini;
 .admin-grid-cell.dragging{opacity:0.25}
 .admin-grid-cell.drop-before{box-shadow:inset 4px 0 0 #d42020}
 .admin-grid-cell.drop-after{box-shadow:inset -4px 0 0 #d42020}
-#admin-export-area{max-width:900px;margin:0 auto 60px;padding:0 28px}
-#admin-export-inner{padding:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)}
-#admin-export-label{font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);margin-bottom:10px}
-#admin-export-text{width:100%;height:180px;background:#000;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.08);font-family:'Geist Mono',monospace;font-size:10px;padding:12px;resize:vertical;outline:none;display:block;margin-bottom:10px}
 #admin-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#d42020;color:#fff;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;padding:8px 24px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:100000}
 </style>
 
@@ -4671,7 +4665,6 @@ window.adminToggleMini = adminToggleMini;
     <button class="a-btn" id="admin-mini-btn" onclick="adminToggleMini()">サイトを見ながら編集 ↑</button>
     <button class="a-btn red" id="admin-export-btn" onclick="adminExport()">Apply &amp; Export</button>
     <button class="a-btn" onclick="ghSetup()">GitHub</button>
-    <button class="a-btn" onclick="adminCopyExport()">Copy JSON</button>
     <button class="a-btn" onclick="adminClose()">Close ✕</button>
   </div>
   <div class="admin-tab-bar">
@@ -4680,13 +4673,6 @@ window.adminToggleMini = adminToggleMini;
     <button class="admin-tab" id="admin-tab-pages" onclick="adminSwitchTab('pages')">Pages</button>
   </div>
   <div id="admin-body"></div>
-  <div id="admin-export-area" style="display: block;">
-    <div id="admin-export-inner">
-      <div id="admin-export-label">EXPORT JSON — HTMLのphotosに貼り付けて永続化できます</div>
-      <textarea id="admin-export-text" readonly=""></textarea>
-      <button class="a-btn" onclick="adminCopyExport()">Copy to Clipboard</button>
-    </div>
-  </div>
   <div id="admin-toast" style="opacity: 0;">43枚を life/ に設定しました</div>
 </div>
 
