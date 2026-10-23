@@ -3065,6 +3065,7 @@ function adminOpen() {
   adminData = CATEGORIES.map(c => ({...c, photos: c.photos.map(p => ({...p}))}));
   adminRender();
   document.getElementById('admin-overlay').style.display = 'block';
+  ghUpdateButton();
   window._isAdminMode = true;
 }
 window.adminOpen = adminOpen;
@@ -3634,6 +3635,119 @@ function adminIsEmptySrc(src) {
   return !src || /\/$/.test(src);
 }
 
+// ─── 写真の並び：PC（5列）とスマホ（2列）のグリッドを並べて表示し、ドラッグ&ドロップで並べ替える ───
+let adminWorksView = 'grid';
+let adminDragFrom = null;
+const adminLandscape = new Map(); // src → 横長かどうか（描き直しのたびに高さが跳ねないよう覚えておく）
+
+function adminRenderKeepScroll() {
+  const ov = document.getElementById('admin-overlay');
+  const y = ov.scrollTop;
+  adminRender();
+  ov.scrollTop = y;
+}
+
+function adminPhotoGrids(ci) {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;gap:24px;align-items:flex-start';
+  const make = (label, cols, width, mobile) => {
+    const col = document.createElement('div');
+    col.style.cssText = 'flex:0 0 ' + width + ';min-width:0';
+    const cap = document.createElement('div');
+    cap.textContent = label;
+    cap.style.cssText = 'font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.35);margin-bottom:8px';
+    const grid = document.createElement('div');
+    grid.className = 'admin-grid';
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+    adminData[ci].photos.forEach((p, pi) => grid.appendChild(adminGridCell(ci, pi, mobile)));
+    col.appendChild(cap);
+    col.appendChild(grid);
+    return col;
+  };
+  wrap.appendChild(make('PC — 5列', 5, 'calc(100% - 204px)', false));
+  wrap.appendChild(make('スマホ — 2列', 2, '180px', true));
+  return wrap;
+}
+
+function adminGridCell(ci, pi, mobile) {
+  const p = adminData[ci].photos[pi];
+  const key = ci + '-' + pi;
+  const cell = document.createElement('div');
+  cell.className = 'admin-grid-cell';
+  cell.dataset.key = key;
+  cell.draggable = true;
+  cell.title = (p.title ? p.title + '\n' : '') + (p.src || '');
+  const isVideo = !!(p.video || /\.(mp4|mov|webm)$/i.test(p.src || ''));
+  // サイトと同じく、動画と横写真は2マス分の幅
+  if (isVideo || adminLandscape.get(p.src)) cell.classList.add('landscape');
+  if (isVideo) {
+    cell.innerHTML = '<svg viewBox="0 0 24 24" stroke-width="0.8" stroke="rgba(255,255,255,0.5)" fill="none" width="20" height="20" style="position:absolute;inset:0;margin:auto"><polygon points="5,3 19,12 5,21"/></svg>';
+  } else if (p.src && !adminIsEmptySrc(p.src)) {
+    const img = document.createElement('img');
+    img.draggable = false;
+    img.loading = 'lazy';
+    const pos = mobile ? (p.cropPosMobile || p.cropPos) : (p.cropPos || p.cropPosMobile);
+    if (pos) img.style.objectPosition = pos;
+    img.onload = () => {
+      const land = img.naturalWidth > img.naturalHeight;
+      adminLandscape.set(p.src, land);
+      cell.classList.toggle('landscape', land);
+    };
+    img.src = p.src;
+    cell.appendChild(img);
+  }
+  const num = document.createElement('span');
+  num.className = 'admin-grid-num';
+  num.textContent = pi + 1;
+  cell.appendChild(num);
+
+  // PCとスマホの同じ写真を一緒に光らせる
+  const linked = () => document.querySelectorAll('.admin-grid-cell[data-key="' + key + '"]');
+  cell.addEventListener('mouseenter', () => linked().forEach(c => c.classList.add('linked')));
+  cell.addEventListener('mouseleave', () => linked().forEach(c => c.classList.remove('linked')));
+
+  const clearDrop = () => cell.classList.remove('drop-before', 'drop-after');
+  const isAfter = e => {
+    const r = cell.getBoundingClientRect();
+    return e.clientX > r.left + r.width / 2;
+  };
+  cell.addEventListener('dragstart', e => {
+    adminDragFrom = {ci, pi};
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+    setTimeout(() => linked().forEach(c => c.classList.add('dragging')), 0);
+  });
+  cell.addEventListener('dragend', () => {
+    adminDragFrom = null;
+    document.querySelectorAll('.admin-grid-cell.dragging').forEach(c => c.classList.remove('dragging'));
+  });
+  cell.addEventListener('dragover', e => {
+    if (!adminDragFrom || adminDragFrom.ci !== ci) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const after = isAfter(e);
+    cell.classList.toggle('drop-after', after);
+    cell.classList.toggle('drop-before', !after);
+  });
+  cell.addEventListener('dragleave', clearDrop);
+  cell.addEventListener('drop', e => {
+    clearDrop();
+    if (!adminDragFrom || adminDragFrom.ci !== ci) return;
+    e.preventDefault();
+    const from = adminDragFrom.pi;
+    let to = pi + (isAfter(e) ? 1 : 0);
+    if (from < to) to--;
+    adminDragFrom = null;
+    if (to === from) return;
+    adminSnapshot();
+    const arr = adminData[ci].photos;
+    const [item] = arr.splice(from, 1);
+    arr.splice(to, 0, item);
+    adminRenderKeepScroll();
+  });
+  return cell;
+}
+
 function adminRenderWorks(body) {
   const addCatWrap = document.createElement('div');
   addCatWrap.style.cssText = 'margin-bottom:32px;display:flex;gap:10px;align-items:center';
@@ -3652,6 +3766,15 @@ function adminRenderWorks(body) {
     adminRender();
   };
   addCatWrap.appendChild(addCatBtn);
+  // 写真の表示：グリッド（並べ替え向き）／リスト（パスやタイトルの編集向き）
+  [['grid', 'Grid'], ['list', 'List']].forEach(([mode, label]) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    const on = adminWorksView === mode;
+    b.style.cssText = 'font-family:Geist Mono,monospace;font-size:9px;letter-spacing:0.15em;background:' + (on ? 'rgba(255,255,255,0.12)' : 'none') + ';border:1px solid rgba(255,255,255,' + (on ? '0.4' : '0.15') + ');color:rgba(255,255,255,' + (on ? '0.9' : '0.4') + ');padding:7px 14px;cursor:pointer;margin-left:' + (mode === 'grid' ? 'auto' : '0');
+    b.onclick = () => { adminWorksView = mode; adminRenderKeepScroll(); };
+    addCatWrap.appendChild(b);
+  });
   body.appendChild(addCatWrap);
 
   adminData.forEach((cat, ci) => {
@@ -3945,7 +4068,7 @@ function adminRenderWorks(body) {
       row.appendChild(delBtn);
       list.appendChild(row);
     });
-    sec.appendChild(list);
+    sec.appendChild(adminWorksView === 'grid' ? adminPhotoGrids(ci) : list);
     body.appendChild(sec);
   });
 }
@@ -4042,10 +4165,15 @@ window.adminExport = function() {
   try { localStorage.setItem('idauyu_photos', JSON.stringify(out)); } catch(e) {}
   const ta = document.getElementById('admin-export-text');
   ta.value = JSON.stringify(out, null, 2);
-  // HTMLファイルとしてダウンロード
-  downloadUpdatedHTML();
+  const newHTML = buildUpdatedHTML();
   curSection = _cur; adminApplyLive(); window.scrollTo(0, _y);
-  showAdminToast('Saved & Downloading!');
+  // GitHub に直接公開する設定があれば公開、なければHTMLファイルとしてダウンロード
+  if (ghIsSetUp()) {
+    ghPublish(newHTML);
+  } else {
+    downloadUpdatedHTML(newHTML);
+    showAdminToast('Saved & Downloading!');
+  }
 };
 
 window.adminCopyExport = function() {
@@ -4054,7 +4182,7 @@ window.adminCopyExport = function() {
   navigator.clipboard && navigator.clipboard.writeText(ta.value).then(() => showAdminToast('Copied!'));
 };
 
-function downloadUpdatedHTML() {
+function buildUpdatedHTML() {
   // Admin overlayを一時的に非表示にしてからHTML取得
   const overlay = document.getElementById('admin-overlay');
   const prevDisplay = overlay.style.display;
@@ -4205,6 +4333,21 @@ function downloadUpdatedHTML() {
     document.getElementById('site-header').style.marginTop = '48px';
   }
 
+  // 書き出し時点の通知や表示名がファイルに残らないよう戻す
+  // （文字列を分けて書くのは、このスクリプト自身に当たらないようにするため。末尾のHTML側だけを直す）
+  const resetTag = (html, open, inner) => {
+    const i = html.lastIndexOf(open);
+    if (i < 0) return html;
+    const gt = html.indexOf('>', i);
+    const close = html.indexOf('</', gt);
+    return html.slice(0, i) + open + inner.attrs + '>' + inner.text + html.slice(close);
+  };
+  newHTML = resetTag(newHTML, '<div id="admin' + '-toast"', {attrs: '', text: ''});
+  newHTML = resetTag(newHTML, '<button class="a-btn red" id="admin' + '-export-btn"', {attrs: ' onclick="adminExport()"', text: 'Apply &amp; Export'});
+  return newHTML;
+}
+
+function downloadUpdatedHTML(newHTML = buildUpdatedHTML()) {
   const blob = new Blob([newHTML], {type: 'text/html'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -4213,11 +4356,190 @@ function downloadUpdatedHTML() {
   URL.revokeObjectURL(a.href);
 }
 
-function showAdminToast(msg) {
+// ════════════════════════════════════════════════════════════════
+//  GitHub に直接公開（Apply & Export で index.html を上書き）
+//  合鍵（アクセストークン）はこのブラウザの中にだけ、パスワードで暗号化して保存する
+// ════════════════════════════════════════════════════════════════
+const GH = { owner: 'i-dauyu', repo: 'github.io', path: 'index.html', branch: 'main', storeKey: 'idauyu_gh' };
+// このページが公開された時刻。これより新しいコミットが GitHub にあれば、上書きして消さないよう止める
+let ghBaseTime = Date.parse(document.lastModified) || Date.now();
+
+function ghIsSetUp() {
+  try { return !!JSON.parse(localStorage.getItem(GH.storeKey) || 'null'); } catch(e) { return false; }
+}
+function ghUpdateButton() {
+  const b = document.getElementById('admin-export-btn');
+  if (b) b.textContent = ghIsSetUp() ? 'Apply & Publish' : 'Apply & Export';
+}
+
+const ghB64 = u8 => { let bin = ''; for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(bin); };
+const ghUnB64 = str => Uint8Array.from(atob(str), c => c.charCodeAt(0));
+
+async function ghDeriveKey(pass, salt) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256'}, base, {name: 'AES-GCM', length: 256}, false, ['encrypt', 'decrypt']);
+}
+async function ghStoreToken(token, pass) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const data = new Uint8Array(await crypto.subtle.encrypt({name: 'AES-GCM', iv}, await ghDeriveKey(pass, salt), new TextEncoder().encode(token)));
+  localStorage.setItem(GH.storeKey, JSON.stringify({salt: ghB64(salt), iv: ghB64(iv), data: ghB64(data)}));
+}
+async function ghReadToken(pass) {
+  const st = JSON.parse(localStorage.getItem(GH.storeKey));
+  try {
+    const plain = await crypto.subtle.decrypt({name: 'AES-GCM', iv: ghUnB64(st.iv)}, await ghDeriveKey(pass, ghUnB64(st.salt)), ghUnB64(st.data));
+    return new TextDecoder().decode(plain);
+  } catch(e) {
+    throw new Error('パスワードが違います');
+  }
+}
+
+async function ghApi(token, path, opts = {}) {
+  const res = await fetch('https://api.github.com/repos/' + GH.owner + '/' + GH.repo + path, {
+    ...opts,
+    cache: 'no-store',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opts.body ? {'Content-Type': 'application/json'} : {}),
+    },
+  });
+  if (res.ok) return res.json();
+  if (res.status === 401) throw new Error('合鍵が無効か、期限が切れています。GitHub ボタンから設定し直してください');
+  if (res.status === 403 || res.status === 404) throw new Error('合鍵にこのリポジトリへの書き込み権限がありません（' + res.status + '）');
+  if (res.status === 409 || res.status === 422) throw new Error('GitHub 側が先に更新されました。ページを再読み込みしてから、もう一度保存してください');
+  throw new Error('GitHub との通信に失敗しました（' + res.status + '）');
+}
+
+// 小さな入力ダイアログ。fields: [{name, label, type, placeholder}]。キャンセルなら null
+function ghDialog({title, text, fields = [], ok = 'OK', extra = null}) {
+  return new Promise(resolve => {
+    const back = document.createElement('div');
+    back.className = 'gh-dialog-back';
+    const box = document.createElement('div');
+    box.className = 'gh-dialog';
+    box.innerHTML = '<div class="gh-dialog-title"></div><div class="gh-dialog-text"></div><div class="gh-dialog-fields"></div><div class="gh-dialog-error"></div><div class="gh-dialog-btns"></div>';
+    box.querySelector('.gh-dialog-title').textContent = title;
+    box.querySelector('.gh-dialog-text').textContent = text || '';
+    const inputs = {};
+    fields.forEach(f => {
+      const lab = document.createElement('label');
+      lab.textContent = f.label;
+      const inp = document.createElement('input');
+      inp.type = f.type || 'text';
+      inp.placeholder = f.placeholder || '';
+      inp.autocomplete = 'off';
+      inp.spellcheck = false;
+      lab.appendChild(inp);
+      box.querySelector('.gh-dialog-fields').appendChild(lab);
+      inputs[f.name] = inp;
+    });
+    const close = val => { back.remove(); resolve(val); };
+    const btns = box.querySelector('.gh-dialog-btns');
+    const mk = (label, cls, fn) => { const b = document.createElement('button'); b.className = 'a-btn ' + cls; b.textContent = label; b.onclick = fn; btns.appendChild(b); return b; };
+    if (extra) mk(extra.label, '', () => close({extra: true}));
+    mk('やめる', '', () => close(null));
+    const okBtn = mk(ok, 'red', () => {
+      const vals = {};
+      Object.keys(inputs).forEach(k => vals[k] = inputs[k].value);
+      close(vals);
+    });
+    Object.values(inputs).forEach(inp => inp.addEventListener('keydown', e => { if (e.key === 'Enter') okBtn.click(); }));
+    back.appendChild(box);
+    document.getElementById('admin-overlay').appendChild(back);
+    const first = Object.values(inputs)[0];
+    (first || okBtn).focus();
+  });
+}
+
+window.ghSetup = async function() {
+  const res = await ghDialog({
+    title: 'GitHub に直接公開',
+    text: (ghIsSetUp() ? '設定済みです。設定し直す場合は、合鍵とパスワードを入れてください。\n\n' : '')
+      + '合鍵（Fine-grained personal access token）は、このブラウザの中にだけ、パスワードで暗号化して保存します。公開のたびにパスワードを聞きます。',
+    fields: [
+      {name: 'token', label: '合鍵（github_pat_…）', type: 'password', placeholder: 'github_pat_...'},
+      {name: 'pass', label: 'パスワード（公開のたびに入力）', type: 'password'},
+      {name: 'pass2', label: 'パスワード（確認）', type: 'password'},
+    ],
+    ok: '保存',
+    extra: ghIsSetUp() ? {label: '設定を消す'} : null,
+  });
+  if (!res) return;
+  if (res.extra) {
+    localStorage.removeItem(GH.storeKey);
+    ghUpdateButton();
+    showAdminToast('GitHub の設定を消しました');
+    return;
+  }
+  const token = res.token.trim();
+  if (!token) return showAdminToast('合鍵が空です');
+  if (res.pass.length < 8) return showAdminToast('パスワードは8文字以上にしてください');
+  if (res.pass !== res.pass2) return showAdminToast('パスワードが一致しません');
+  try {
+    await ghApi(token, '/contents/' + GH.path + '?ref=' + GH.branch); // 合鍵で読めるか確認
+  } catch(e) {
+    return showAdminToast(e.message, 7000);
+  }
+  await ghStoreToken(token, res.pass);
+  ghUpdateButton();
+  showAdminToast('保存しました。次から Apply & Publish で公開できます');
+};
+
+async function ghPublish(html) {
+  // 書き出しが壊れていないか、送る前に確かめる
+  const m = html.match(/const CATEGORIES = (\[[\s\S]*?\n\]);/);
+  let photoCount = 0;
+  try { photoCount = JSON.parse(m[1]).reduce((n, c) => n + c.photos.length, 0); } catch(e) {}
+  if (!/<\/html>\s*$/i.test(html) || photoCount === 0) {
+    return showAdminToast('書き出したHTMLが不完全なため、公開を止めました', 7000);
+  }
+  const res = await ghDialog({
+    title: '本番サイトに公開します',
+    text: '写真 ' + photoCount + ' 枚の状態で ' + GH.owner + '.github.io に公開します。1〜2分で反映されます。',
+    fields: [{name: 'pass', label: 'パスワード', type: 'password'}],
+    ok: '公開する',
+  });
+  if (!res) return;
+  showAdminToast('公開中…', 60000);
+  try {
+    const token = await ghReadToken(res.pass);
+    // 開いたあとに GitHub 側が更新されていたら、上書きして消さないよう止める
+    const commits = await ghApi(token, '/commits?path=' + GH.path + '&sha=' + GH.branch + '&per_page=1');
+    const latest = commits[0] && Date.parse(commits[0].commit.committer.date);
+    if (latest && latest > ghBaseTime) {
+      throw new Error('このページを開いたあとに GitHub 側が更新されています。ページを再読み込みしてから、もう一度保存してください');
+    }
+    const cur = await ghApi(token, '/contents/' + GH.path + '?ref=' + GH.branch);
+    const bytes = new TextEncoder().encode(html);
+    if (bytes.length < cur.size * 0.7) {
+      throw new Error('書き出したHTMLが今のサイトより極端に小さいため、公開を止めました');
+    }
+    const put = await ghApi(token, '/contents/' + GH.path, {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: 'Admin: update from i_dauyu Admin',
+        content: ghB64(bytes),
+        sha: cur.sha,
+        branch: GH.branch,
+      }),
+    });
+    ghBaseTime = (Date.parse(put.commit.committer.date) || Date.now()) + 1000;
+    showAdminToast('公開しました。1〜2分で反映されます', 7000);
+  } catch(e) {
+    showAdminToast(e.message, 7000);
+  }
+}
+
+let _adminToastTimer;
+function showAdminToast(msg, ms = 2000) {
   const t = document.getElementById('admin-toast');
   t.textContent = msg;
   t.style.opacity = '1';
-  setTimeout(() => { t.style.opacity = '0'; }, 2000);
+  clearTimeout(_adminToastTimer);
+  _adminToastTimer = setTimeout(() => { t.style.opacity = '0'; }, ms);
 }
 
 // Shift+A+D+M
@@ -4297,6 +4619,25 @@ window.adminToggleMini = adminToggleMini;
 .admin-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#d42020;transform:scaleX(0);transition:transform 0.2s}
 .admin-tab.active::after{transform:scaleX(1)}
 #admin-body{padding:28px;max-width:900px;margin:0 auto}
+.gh-dialog-back{position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.gh-dialog{width:100%;max-width:420px;background:#161616;border:1px solid rgba(255,255,255,0.12);padding:22px;display:flex;flex-direction:column;gap:14px}
+.gh-dialog-title{font-family:'EB Garamond',serif;font-style:italic;font-size:20px;color:#fff}
+.gh-dialog-text{font-size:11px;line-height:1.7;color:rgba(255,255,255,0.55);white-space:pre-wrap}
+.gh-dialog-text:empty,.gh-dialog-error:empty{display:none}
+.gh-dialog-fields{display:flex;flex-direction:column;gap:10px}
+.gh-dialog-fields label{display:flex;flex-direction:column;gap:5px;font-size:9px;letter-spacing:0.12em;color:rgba(255,255,255,0.45)}
+.gh-dialog-fields input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;font-family:'Geist Mono',monospace;font-size:12px;padding:8px 10px;outline:none}
+.gh-dialog-fields input:focus{border-color:rgba(255,255,255,0.4)}
+.gh-dialog-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.admin-grid{display:grid;gap:2px;padding:2px;background:#000;grid-auto-flow:dense}
+.admin-grid-cell{position:relative;aspect-ratio:4/5;overflow:hidden;background:rgba(255,255,255,0.06);cursor:grab;transition:opacity 0.15s}
+.admin-grid-cell.landscape{grid-column:span 2;aspect-ratio:8/5}
+.admin-grid-cell img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.admin-grid-num{position:absolute;top:3px;left:3px;font-size:9px;line-height:1;padding:2px 4px;background:rgba(0,0,0,0.6);color:#fff;pointer-events:none}
+.admin-grid-cell.linked{outline:2px solid #fff;outline-offset:-2px}
+.admin-grid-cell.dragging{opacity:0.25}
+.admin-grid-cell.drop-before{box-shadow:inset 4px 0 0 #d42020}
+.admin-grid-cell.drop-after{box-shadow:inset -4px 0 0 #d42020}
 #admin-export-area{max-width:900px;margin:0 auto 60px;padding:0 28px}
 #admin-export-inner{padding:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)}
 #admin-export-label{font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);margin-bottom:10px}
@@ -4308,7 +4649,8 @@ window.adminToggleMini = adminToggleMini;
   <div id="admin-bar">
     <span id="admin-bar-title">i_dauyu — Admin</span>
     <button class="a-btn" id="admin-mini-btn" onclick="adminToggleMini()">サイトを見ながら編集 ↑</button>
-    <button class="a-btn red" onclick="adminExport()">Apply &amp; Export</button>
+    <button class="a-btn red" id="admin-export-btn" onclick="adminExport()">Apply &amp; Export</button>
+    <button class="a-btn" onclick="ghSetup()">GitHub</button>
     <button class="a-btn" onclick="adminCopyExport()">Copy JSON</button>
     <button class="a-btn" onclick="adminClose()">Close ✕</button>
   </div>
