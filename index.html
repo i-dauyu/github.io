@@ -3640,6 +3640,24 @@ let adminWorksView = 'grid';
 let adminDragFrom = null;
 const adminLandscape = new Map(); // src → 横長かどうか（描き直しのたびに高さが跳ねないよう覚えておく）
 
+// ドラッグ中に画面の上端・下端へ近づけたら、近いほど速く自動スクロールする
+let adminAutoScrollY = null, adminAutoScrollRaf = 0;
+function adminAutoScrollStep() {
+  if (!adminDragFrom) { adminAutoScrollRaf = 0; return; }
+  if (adminAutoScrollY !== null) {
+    const ov = document.getElementById('admin-overlay');
+    const bar = document.querySelector('.admin-tab-bar');
+    const top = bar ? bar.getBoundingClientRect().bottom : 0; // 上の固定バーの下端
+    const edge = 90;
+    let v = 0;
+    if (adminAutoScrollY < top + edge) v = -Math.min(1, (top + edge - adminAutoScrollY) / edge);
+    else if (adminAutoScrollY > window.innerHeight - edge) v = Math.min(1, (adminAutoScrollY - (window.innerHeight - edge)) / edge);
+    if (v) ov.scrollTop += Math.round(v * 24);
+  }
+  adminAutoScrollRaf = requestAnimationFrame(adminAutoScrollStep);
+}
+document.addEventListener('dragover', e => { if (adminDragFrom) adminAutoScrollY = e.clientY; });
+
 function adminRenderKeepScroll() {
   const ov = document.getElementById('admin-overlay');
   const y = ov.scrollTop;
@@ -3713,6 +3731,8 @@ function adminGridCell(ci, pi, mobile) {
   };
   cell.addEventListener('dragstart', e => {
     adminDragFrom = {ci, pi};
+    adminAutoScrollY = null;
+    if (!adminAutoScrollRaf) adminAutoScrollRaf = requestAnimationFrame(adminAutoScrollStep);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', '');
     setTimeout(() => linked().forEach(c => c.classList.add('dragging')), 0);
