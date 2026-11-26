@@ -95,6 +95,9 @@ a.mobile-link{display:block}
 
 /* ─── TOP ─── */
 #top{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#080c14}
+/* ホーム画面に追加したアプリ表示では、100svh がブラウザのツールバー分だけ短く計算されて下に帯が出ることがある。
+   アプリ表示のときだけ、実際に見えている高さ（--app-h、JS で入れる）を使う */
+html.is-app #top{height:var(--app-h,100svh)}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
 .slide.active{opacity:1;pointer-events:auto}
 .slide-img{width:100%;height:100%;object-fit:cover;display:block}
@@ -2277,6 +2280,16 @@ window.addEventListener('resize', () => {
 }, { passive: true });
 window.addEventListener('load', syncTopSlides);
 window.addEventListener('pageshow', syncTopSlides);
+// アプリ表示（ホーム画面に追加）のときだけ、トップの高さを実際に見えている高さに合わせる
+const _appMQ = window.matchMedia('(display-mode: standalone)');
+function syncAppHeight() {
+  const isApp = _appMQ.matches || window.navigator.standalone === true;
+  document.documentElement.classList.toggle('is-app', isApp);
+  if (isApp) document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
+}
+syncAppHeight();
+['resize', 'pageshow', 'orientationchange', 'load'].forEach(ev => window.addEventListener(ev, syncAppHeight));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { syncAppHeight(); setTimeout(syncAppHeight, 300); } });
 // CSS のスマホ/PC が切り替わった瞬間・アプリ表示に戻ってきたときにも確かめる
 _phoneMQ.addEventListener('change', syncTopSlides);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(syncTopSlides, 300); });
