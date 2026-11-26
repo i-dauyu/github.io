@@ -74,6 +74,9 @@ body.menu-open #site-header{border-bottom-color:transparent}
 .mobile-link{padding:12px 32px;font-size:12px;letter-spacing:0.15em;cursor:pointer;background:none;border:none;
   font-family:'Geist Mono',monospace;text-align:left;color:var(--theme-text,#8aaac8)}
 .mobile-link:hover{opacity:0.75}
+/* Shop はリンク（a）なので、ほかのボタンと見た目をそろえる */
+a.header-nav-link,a.mobile-link{text-decoration:none;line-height:normal}
+a.mobile-link{display:block}
 .mobile-work-row{cursor:pointer;display:flex;align-items:baseline;white-space:nowrap;overflow-x:auto;scrollbar-width:none;padding-right:20px}
 .mobile-work-row::-webkit-scrollbar{display:none}
 .mobile-work-row .mobile-link{padding-right:18px;flex:none}
@@ -1821,12 +1824,12 @@ function buildNav() {
     `<button class="header-nav-link" id="nav-about" onclick="goSection('about')">About</button>`);
   mob.insertAdjacentHTML('beforeend',
     `<button class="mobile-link" data-nav="nav-about" onclick="goSection('about');closeMenu()">About</button>`);
-  // Shop → STORESへ外部リンク
-  const STORES_URL = 'https://m2eu5aqavhzwivd5kax0.stores.jp';
+  // Shop → お店へ。別タブにせず、同じタブのまま移る（お店の左上から HP に戻れる）
+  const SHOP_URL = 'https://idauyu.thebase.in/';
   nav.insertAdjacentHTML('beforeend',
-    `<button class="header-nav-link" id="nav-shop" onclick="window.open('${STORES_URL}','_blank')">Shop</button>`);
+    `<a class="header-nav-link" id="nav-shop" href="${SHOP_URL}">Shop</a>`);
   mob.insertAdjacentHTML('beforeend',
-    `<button class="mobile-link" onclick="window.open('${STORES_URL}','_blank');closeMenu()">Shop</button>`);
+    `<a class="mobile-link" href="${SHOP_URL}">Shop</a>`);
   // Contact
   nav.insertAdjacentHTML('beforeend',
     `<button class="header-nav-link" id="nav-contact" onclick="goSection('contact')">Contact</button>`);
