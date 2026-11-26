@@ -2701,6 +2701,12 @@ window.cropApply = function() {
 
 build();
 document.body.classList.add('on-top');
+// ショップなど外から #work / #about / #contact 付きで来たら、そのページを開く
+(function openFromHash() {
+  const h = location.hash.slice(1);
+  if (h === 'about' || h === 'contact') goSection(h);
+  else if (h === 'work') showPage(CATEGORIES[0].id);
+})();
 
 // 保存済みフォントを読み込む
 (function loadSavedFont() {
