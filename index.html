@@ -1912,6 +1912,7 @@ function buildTopSlides() {
   const indicators = document.getElementById('slide-indicators');
   const slides = [];
   const _isMobSlide = window.innerWidth <= 600;
+  window._slidesMob = _isMobSlide; // どちら用の写真で作ったかを覚えておく
   CATEGORIES.forEach(c => c.photos.filter(p => _isMobSlide ? p.featuredMobile : p.featured).forEach(p => slides.push({...p, catId:c.id})));
   slides.splice(0, slides.length, ...sortSlides(slides, _isMobSlide));
   if (!slides.length) CATEGORIES.forEach(c => slides.push({src:'',title:'',tag:c.label,catId:c.id,featured:false,featuredMobile:false}));
@@ -2250,16 +2251,29 @@ window.addEventListener('scroll', () => {
 window.addEventListener('load', () => setTimeout(loadVisibleLazyImages, 200));
 
 // スライド画像のobject-positionをリサイズ時にスマホ/PC切り替え
+// iPhone の Safari は、ほかのサイトから移ってきた直後に画面の幅を一瞬まちがえて返すことがある。
+// そのとき PC 用の写真でトップを作ってしまうので、スマホ/PC の判定が変わったらトップの写真を作り直す
+function syncTopSlides() {
+  const isMob = window.innerWidth <= 600;
+  if (window._slidesMob !== undefined && window._slidesMob !== isMob) {
+    document.getElementById('slides-container').innerHTML = '';
+    document.getElementById('slide-indicators').innerHTML = '';
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('current'));
+    buildTopSlides();
+    const first = document.querySelector('.slide.active');
+    if (first && curSection === 'top') applyTheme(first.dataset.cat);
+  }
+  document.querySelectorAll('.slide-img[data-pos-mobile]').forEach(img => {
+    img.style.objectPosition = isMob ? img.dataset.posMobile : img.dataset.posDesktop;
+  });
+}
 let _resizeSlideTimer;
 window.addEventListener('resize', () => {
   clearTimeout(_resizeSlideTimer);
-  _resizeSlideTimer = setTimeout(() => {
-    const isMob = window.innerWidth <= 600;
-    document.querySelectorAll('.slide-img[data-pos-mobile]').forEach(img => {
-      img.style.objectPosition = isMob ? img.dataset.posMobile : img.dataset.posDesktop;
-    });
-  }, 100);
+  _resizeSlideTimer = setTimeout(syncTopSlides, 100);
 }, { passive: true });
+window.addEventListener('load', syncTopSlides);
+window.addEventListener('pageshow', syncTopSlides);
 
 const heights = ['h-s','h-m','h-m','h-l','h-xl','h-m','h-s','h-l','h-m'];
 function createCell(photo, index) {
